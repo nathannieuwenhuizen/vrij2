@@ -6,7 +6,7 @@ public class GnomeMovement : MonoBehaviour
 {
 
     private Rigidbody rb;
-    private BoxCollider myColl;
+    private CapsuleCollider myColl;
     private Vector3 lookRotation;
 
 
@@ -35,9 +35,14 @@ public class GnomeMovement : MonoBehaviour
     private AnimationCurve jumpCurve;
     private float jumpSpeed = 2f;
 
+    [SerializeField]
+    public Transform headPivot;
+    [SerializeField]
+    private float hatBounciness = 5f;
+
     void Start()
     {
-        myColl = GetComponent<BoxCollider>();
+        myColl = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
     }
 
@@ -89,10 +94,14 @@ public class GnomeMovement : MonoBehaviour
             playerToAttachTo.playerAboveMe = this;
             rb.velocity = Vector3.zero;
             myColl.enabled = false;
-            transform.parent = playerToAttachTo.transform;
+            transform.parent = playerToAttachTo.headPivot;
             //transform.position = playerToAttachTo.transform.position + new Vector3(0, 2, 0);
             canMove = false;
-            Destroy(rb);
+            if (rb != null)
+            {
+                Destroy(rb);
+                rb = null;
+            }
             isOnTop = true;
             StartCoroutine(Jump(playerBelowMe.transform));
         }
@@ -112,7 +121,7 @@ public class GnomeMovement : MonoBehaviour
             yield return new WaitForFixedUpdate();
             index += Time.deltaTime * jumpSpeed;
 
-            float y = startPos + ((dest.position.y + 1f) - startPos) * jumpCurve.Evaluate(index * 2f);
+            float y = startPos + ((dest.position.y + 2f) - startPos) * jumpCurve.Evaluate(index * 2f);
 
             desiredPos.x = dest.position.x;
             desiredPos.y = dest.position.z;
@@ -177,6 +186,10 @@ public class GnomeMovement : MonoBehaviour
             {
                 GoToTopOfStack();
             }
+        }
+        if (rb != null)
+        {
+            headPivot.transform.localRotation = Quaternion.Euler(-new Vector3(Vector3.Distance(Vector3.zero, rb.velocity) * hatBounciness, 0, 0));
         }
     }
 
