@@ -26,9 +26,6 @@ public class GnomeMovement : MonoBehaviour
     private float normalSpeed = 100f;
 
     [SerializeField]
-    private float maxVelocity = 200f;
-
-    [SerializeField]
     private float interactDistanceWithPlayer = 2f;
 
     [SerializeField]
@@ -156,11 +153,7 @@ public class GnomeMovement : MonoBehaviour
         if (canMove && rb != null)
         {
             //look rotational speed
-            rb.AddForce(lookRotation * normalSpeed);
-            if (Vector3.Distance(Vector3.zero, rb.velocity) > maxVelocity)
-            {
-                rb.velocity = rb.velocity.normalized * maxVelocity;
-            }
+            rb.velocity = lookRotation * normalSpeed;
         }
 
         //rotates
