@@ -37,6 +37,9 @@ public class GnomeMovement : MonoBehaviour
     [SerializeField]
     private float hatBounciness = 5f;
 
+    [SerializeField]
+    private bool relativeToCamera = true;
+
     void Start()
     {
         myColl = GetComponent<CapsuleCollider>();
@@ -148,6 +151,21 @@ public class GnomeMovement : MonoBehaviour
     {
         //getting input to aim
         lookRotation = new Vector3(Input.GetAxis("Horizontal_P" + playerIndex), 0, -Input.GetAxis("Vertical_P" + playerIndex));
+
+        if (relativeToCamera)
+        {
+            Vector3 forward = Camera.main.transform.forward;
+            forward.y = 0;
+            forward.Normalize();
+            lookRotation = forward * -Input.GetAxis("Vertical_P" + playerIndex);
+
+            Vector3 right = Camera.main.transform.right;
+            right.y = 0;
+            right.Normalize();
+            lookRotation += right * Input.GetAxis("Horizontal_P" + playerIndex);
+
+            lookRotation.y = 0;
+        }
 
         //move function
         if (canMove && rb != null)
