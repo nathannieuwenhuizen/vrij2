@@ -11,7 +11,7 @@ public class GnomeMovement : MonoBehaviour
 
 
     [SerializeField]
-    private int playerIndex = 0;
+    private int controllerIndex = 0;
 
     public bool canMove = false;
     public bool isOnTop = false;
@@ -40,6 +40,18 @@ public class GnomeMovement : MonoBehaviour
     [SerializeField]
     private bool relativeToCamera = true;
 
+    [SerializeField]
+    private InteractableObject hoverObject;
+
+    [SerializeField]
+    private TrenchCoat trenchCoat;
+
+    public TrenchCoat TrenchCoat
+    {
+        get { return trenchCoat; }
+        set { trenchCoat = value; }
+    }
+
     void Start()
     {
         myColl = GetComponent<CapsuleCollider>();
@@ -47,7 +59,7 @@ public class GnomeMovement : MonoBehaviour
     }
 
 
-    public GnomeMovement CheckClosestPlayer()
+    public GnomeMovement GetClosestPlayer()
     {
         GnomeMovement closest = null;
         float closestDistance = interactDistanceWithPlayer * 2;
@@ -60,10 +72,37 @@ public class GnomeMovement : MonoBehaviour
             {
                 GnomeMovement otherPlayer = hitColliders[i].GetComponent<GnomeMovement>();
                 float distance = Vector3.Distance(transform.position, hitColliders[i].transform.position);
-                if ( distance < closestDistance && !otherPlayer.isOnTop && otherPlayer != this)
+                if (distance < closestDistance && !otherPlayer.isOnTop && otherPlayer != this)
                 {
                     closestDistance = distance;
                     closest = hitColliders[i].GetComponent<GnomeMovement>();
+                }
+            }
+            i++;
+        }
+
+        return closest;
+    }
+
+    public InteractableObject GetClosestInteractable()
+    {
+        InteractableObject closest = null;
+        float closestDistance = interactDistanceWithPlayer * 2;
+
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactDistanceWithPlayer);
+        int i = 0;
+        while (i < hitColliders.Length)
+        {
+            if (hitColliders[i].transform.parent != null) {
+                if (hitColliders[i].transform.parent.GetComponent<InteractableObject>() != null)
+                {
+                    InteractableObject otherObject = hitColliders[i].transform.parent.GetComponent<InteractableObject>();
+                    float distance = Vector3.Distance(transform.position, hitColliders[i].transform.position);
+                    if (distance < closestDistance && otherObject.PopupIsActive)
+                    {
+                        closestDistance = distance;
+                        closest = otherObject;
+                    }
                 }
             }
             i++;
@@ -81,7 +120,7 @@ public class GnomeMovement : MonoBehaviour
 
     public void GoToTopOfStack()
     {
-        GnomeMovement closestPlayer = CheckClosestPlayer();
+        GnomeMovement closestPlayer = GetClosestPlayer();
         if (closestPlayer != null)
         {
             GnomeMovement playerToAttachTo = closestPlayer;
@@ -90,6 +129,12 @@ public class GnomeMovement : MonoBehaviour
                 playerToAttachTo = closestPlayer.playerAboveMe;
             }
             
+            if (playerToAttachTo.trenchCoat != null)
+            {
+                playerToAttachTo.trenchCoat.Wear(this);
+                playerToAttachTo.trenchCoat = null;
+            }
+
             playerBelowMe = playerToAttachTo;
             playerToAttachTo.playerAboveMe = this;
             rb.velocity = Vector3.zero;
@@ -104,6 +149,14 @@ public class GnomeMovement : MonoBehaviour
             }
             isOnTop = true;
             StartCoroutine(Jump(playerBelowMe.transform));
+        } else
+        {
+            //discards trechcoat to the ground (makes popupacitve again)
+            if (trenchCoat != null)
+            {
+                trenchCoat.TakeOff(this, true);
+            }
+
         }
     }
     IEnumerator Jump(Transform dest)
@@ -134,6 +187,15 @@ public class GnomeMovement : MonoBehaviour
     {
         if (playerBelowMe != null)
         {
+            //gives trenchcout to player below me
+            if (trenchCoat != null)
+            {
+                Debug.Log("transfer to other player");
+
+                trenchCoat.Wear(playerBelowMe);
+                trenchCoat = null;
+            }
+
             playerBelowMe.playerAboveMe = null;
             canMove = true;
             isOnTop = false;
@@ -142,7 +204,11 @@ public class GnomeMovement : MonoBehaviour
             myColl.enabled = true;
             playerBelowMe = null;
             transform.parent = null;
-
+        } else
+        {
+            Debug.Log("Should take off now");
+            //discards trechcoat to the ground (makes popupacitve again)
+            trenchCoat.TakeOff(this, true);
         }
 
     }
@@ -150,19 +216,19 @@ public class GnomeMovement : MonoBehaviour
     void FixedUpdate()
     {
         //getting input to aim
-        lookRotation = new Vector3(Input.GetAxis("Horizontal_P" + playerIndex), 0, -Input.GetAxis("Vertical_P" + playerIndex));
+        lookRotation = new Vector3(Input.GetAxis("Horizontal_P" + controllerIndex), 0, -Input.GetAxis("Vertical_P" + controllerIndex));
 
         if (relativeToCamera)
         {
             Vector3 forward = Camera.main.transform.forward;
             forward.y = 0;
             forward.Normalize();
-            lookRotation = forward * -Input.GetAxis("Vertical_P" + playerIndex);
+            lookRotation = forward * -Input.GetAxis("Vertical_P" + controllerIndex);
 
             Vector3 right = Camera.main.transform.right;
             right.y = 0;
             right.Normalize();
-            lookRotation += right * Input.GetAxis("Horizontal_P" + playerIndex);
+            lookRotation += right * Input.GetAxis("Horizontal_P" + controllerIndex);
 
             lookRotation.y = 0;
         }
@@ -171,11 +237,11 @@ public class GnomeMovement : MonoBehaviour
         if (canMove && rb != null)
         {
             //look rotational speed
-            rb.velocity = lookRotation * normalSpeed;
+            rb.velocity = new Vector3(lookRotation.x * normalSpeed, rb.velocity.y, lookRotation.z * normalSpeed);
         }
 
         //rotates
-        if (Input.GetAxis("Horizontal_P" + playerIndex) == 0 && Input.GetAxis("Vertical_P" + playerIndex) == 0) {
+        if (Input.GetAxis("Horizontal_P" + controllerIndex) == 0 && Input.GetAxis("Vertical_P" + controllerIndex) == 0) {
 
         } else {
             //rb.rotation = Quaternion.Slerp(rb.rotation, Quaternion.LookRotation(lookRotation), Time.deltaTime * turnSpeed);
@@ -187,7 +253,7 @@ public class GnomeMovement : MonoBehaviour
     private void Update()
     {
         //stack/unstack to other players
-        if (Input.GetButtonDown("Fire_P" + playerIndex))
+        if (Input.GetButtonDown("Fire_P" + controllerIndex))
         {
             if (isOnTop)
             {
@@ -198,13 +264,35 @@ public class GnomeMovement : MonoBehaviour
                 GoToTopOfStack();
             }
         }
+
+        //head animation
         if (rb != null)
         {
             headPivot.transform.localRotation = Quaternion.Euler(-new Vector3(Vector3.Distance(Vector3.zero, rb.velocity) * hatBounciness, 0, 0));
         }
+
+
+        //check object that is closest to player to interact with
+        InteractableObject closestObject = GetClosestInteractable();
+        if (closestObject != hoverObject)
+        {
+            if (hoverObject != null) hoverObject.HideUI();
+            hoverObject = closestObject;
+            if (hoverObject != null) hoverObject.ShowUI(controllerIndex);
+        }
+
+        //interact with enviroment
+        if (Input.GetButtonDown("Interact_P" + controllerIndex))
+        {
+            Debug.Log("interact" + controllerIndex);
+            if (hoverObject != null)
+            {
+                hoverObject.Interact(this);
+            }
+        }
     }
 
-    void OnDrawGizmosSelected()
+        void OnDrawGizmosSelected()
     {
         // Display the detection radius
         Gizmos.color = Color.white;

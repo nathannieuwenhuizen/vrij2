@@ -17,12 +17,29 @@ public class HumanMovement : MonoBehaviour
     [SerializeField]
     private float randomOffset = 0.1f;
 
+    private int cIndex = 0;
+
     private void Start()
+    {
+        //StartPatrolling();
+    }
+
+    public void StartPatrolling()
     {
         if (wayPoints.Length > 0)
         {
-            StartCoroutine(WalkLoop(transformToPositions(wayPoints), false, 0));
+            StartCoroutine(WalkLoop(transformToPositions(wayPoints), false, cIndex));
         }
+    }
+
+    public void StartChase(Transform target)
+    {
+        StartCoroutine(Chasing(target));
+    }
+
+    public void StopMovement()
+    {
+        StopAllCoroutines();
     }
 
     Vector3[] transformToPositions(Transform[] transforms)
@@ -74,8 +91,22 @@ public class HumanMovement : MonoBehaviour
         StopAllCoroutines();
         index += invert ? -1 : 1;
         index = (index + positions.Length) % positions.Length;
+        cIndex = index;
         StartCoroutine(WalkLoop(positions, invert, index));
 
+    }
+
+    public IEnumerator Chasing(Transform target)
+    {
+        Vector3 newDirection;
+
+        while (true)
+        {
+            newDirection = Vector3.RotateTowards(transform.forward, target.position - transform.position, Time.deltaTime * rotateSpeed, 0.0f);
+            transform.rotation = Quaternion.LookRotation(newDirection);
+            transform.Translate(transform.InverseTransformDirection(transform.forward) * walkSpeed);
+            yield return new WaitForFixedUpdate();
+        }
     }
 
     public IEnumerator GoTo(Vector3 pos, bool destoryWhenFinish = false)

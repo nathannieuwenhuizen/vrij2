@@ -12,8 +12,10 @@ public interface IState
     void Exit();
 
 }
+[System.Serializable]
 public class FSM : MonoBehaviour
 {
+    [SerializeField]
     private IState cState;
     public FSM (IState _startState)
     {

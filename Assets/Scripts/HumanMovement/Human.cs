@@ -13,21 +13,43 @@ public class Human : MonoBehaviour
     [SerializeField]
     private float detectionRange = 2f;
 
-    [SerializeField]
-    private Light spotLight;
+    public Light spotLight;
+
+    [HideInInspector]
+    public HumanMovement movement;
+
+    private GnomeMovement[] gnomes;
 
     [SerializeField]
-    private GnomeMovement[] gnomes;
+    private FSM stateMachine;
+
+    public ChaseState chaseState;
+    public PatrolState patrolState;
+
+    public float gnomeAttackDistance = 2f;
+
+    [HideInInspector]
+    public GnomeMovement foundGnome;
 
     private void Start()
     {
+        movement = GetComponent<HumanMovement>();
         gnomes = FindObjectsOfType<GnomeMovement>();
+
+
+        patrolState = new PatrolState();
+        patrolState.human = this;
+        chaseState = new ChaseState();
+        chaseState.human = this;
+
+        stateMachine = new FSM(patrolState);
+
     }
 
     private void Update()
     {
-
-        spotLight.color = detectedGnome() != null ? Color.red : Color.yellow;
+        stateMachine.Update();
+        //spotLight.color = detectedGnome() != null ? Color.red : Color.yellow;
     }
 
     private void OnDrawGizmosSelected()
@@ -42,7 +64,7 @@ public class Human : MonoBehaviour
         UnityEditor.Handles.DrawLine(transform.position, transform.position + leftLine);
     }
 
-    GnomeMovement detectedGnome()
+    public GnomeMovement detectedGnome()
     {
         GnomeMovement result = null;
 
@@ -55,7 +77,18 @@ public class Human : MonoBehaviour
                 {
                     if (hit.transform.GetComponent<GnomeMovement>() != null)
                     {
-                        result = hit.transform.GetComponent<GnomeMovement>();
+                        if (gnome.TrenchCoat != null && gnome.playerBelowMe != null)
+                        {
+                            continue;
+                        }
+                        if (gnome.playerAboveMe != null)
+                        {
+                            if (gnome.playerAboveMe.TrenchCoat != null)
+                            {
+                                continue;
+                            }
+                        }
+                        result = gnome;
                     }
                 }
             }
@@ -71,4 +104,69 @@ public class Human : MonoBehaviour
         spotLight.spotAngle = detectionAngle;
         spotLight.range = detectionRange;
     }
+}
+
+public class PatrolState : IState
+{
+    public ILiveStateDelegate OnStateSwitch { get; set; }
+    public Human human;
+    public GnomeMovement lastDetectedGnome;
+    public void Start()
+    {
+        human.spotLight.color = Color.yellow;
+
+        human.movement.StartPatrolling();
+    }
+
+    public void Run()
+    {
+
+        human.foundGnome = human.detectedGnome();
+        if (human.foundGnome != null && lastDetectedGnome == null)
+        {
+            OnStateSwitch(human.chaseState);
+        }
+        lastDetectedGnome = human.foundGnome;
+    }
+    public void Exit()
+    {
+        human.movement.StopMovement();
+    }
+
+}
+
+public class ChaseState : IState
+{
+    public ILiveStateDelegate OnStateSwitch { get; set; }
+    public Human human;
+
+    public void Start()
+    {
+        human.spotLight.color = Color.red;
+
+        human.movement.StartChase(human.foundGnome.transform);
+    }
+
+    public void Run()
+    {
+        human.foundGnome = human.detectedGnome();
+        if (human.foundGnome == null)
+        {
+            OnStateSwitch(human.patrolState);
+            return;
+        }
+
+        if (Vector3.Distance(human.transform.position, human.foundGnome.transform.position) < human.gnomeAttackDistance)
+        {
+            Debug.Log("I'm taking yourt stuff away!");
+            OnStateSwitch(human.patrolState);
+        }
+    }
+
+    public void Exit()
+    {
+        human.movement.StopMovement();
+    }
+
+
 }
