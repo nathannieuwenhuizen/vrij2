@@ -229,6 +229,7 @@ MonoBehaviour:
   playerBelowMe: {fileID: 0}
   turnSpeed: 10
   normalSpeed: 6
+  stackedSpeed: 3
   interactDistanceWithPlayer: 2
   jumpCurve:
     serializedVersion: 2

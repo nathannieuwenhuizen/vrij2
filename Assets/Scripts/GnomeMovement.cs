@@ -26,6 +26,9 @@ public class GnomeMovement : MonoBehaviour
     private float normalSpeed = 100f;
 
     [SerializeField]
+    private float stackedSpeed = 50f;
+
+    [SerializeField]
     private float interactDistanceWithPlayer = 2f;
 
     [SerializeField]
@@ -187,7 +190,7 @@ public class GnomeMovement : MonoBehaviour
     {
         if (playerBelowMe != null)
         {
-            //gives trenchcout to player below me
+            //gives trenchcoat to player below me
             if (trenchCoat != null)
             {
                 Debug.Log("transfer to other player");
@@ -237,7 +240,13 @@ public class GnomeMovement : MonoBehaviour
         if (canMove && rb != null)
         {
             //look rotational speed
-            rb.velocity = new Vector3(lookRotation.x * normalSpeed, rb.velocity.y, lookRotation.z * normalSpeed);
+            if (playerAboveMe == null)
+            {
+                rb.velocity = new Vector3(lookRotation.x * normalSpeed, rb.velocity.y, lookRotation.z * normalSpeed);
+            } else
+            {
+                rb.velocity = new Vector3(lookRotation.x * stackedSpeed, rb.velocity.y, lookRotation.z * stackedSpeed);
+            }
         }
 
         //rotates
