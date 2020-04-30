@@ -14,6 +14,8 @@ public class TrenchCoat : InteractableObject
     public void Wear(GnomeMovement gnome)
     {
         if (gnome == null) return;
+        if (gnome.playerAboveMe != null) { Wear(gnome.playerAboveMe); return; }
+
         transform.parent = gnome.transform;
         gnome.TrenchCoat = this;
         transform.localPosition = new Vector3(0, 0, 0);

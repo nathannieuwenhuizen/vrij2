@@ -2467,7 +2467,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1755263434}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.25, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 968234320}
@@ -5043,6 +5043,11 @@ PrefabInstance:
       propertyPath: m_UseTethers
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3850699335925039817, guid: f667d5b260c73cd4494584e3224312a9,
+        type: 3}
+      propertyPath: m_WorldAccelerationScale
+      value: 0.2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f667d5b260c73cd4494584e3224312a9, type: 3}
 --- !u!1001 &7265835543604444161
@@ -5120,7 +5125,7 @@ PrefabInstance:
     - target: {fileID: 3033577842028841842, guid: 24e03daee338226488569ad30a0e7f4d,
         type: 3}
       propertyPath: detectionAngle
-      value: 109
+      value: 79
       objectReference: {fileID: 0}
     - target: {fileID: 3033577842028841842, guid: 24e03daee338226488569ad30a0e7f4d,
         type: 3}
@@ -5135,7 +5140,7 @@ PrefabInstance:
     - target: {fileID: 4846502790335119303, guid: 24e03daee338226488569ad30a0e7f4d,
         type: 3}
       propertyPath: m_SpotAngle
-      value: 109
+      value: 79
       objectReference: {fileID: 0}
     - target: {fileID: 4846502790335119303, guid: 24e03daee338226488569ad30a0e7f4d,
         type: 3}
@@ -5177,5 +5182,10 @@ PrefabInstance:
       propertyPath: wayPoints.Array.data[1]
       value: 
       objectReference: {fileID: 1555125549}
+    - target: {fileID: 7968456993783906281, guid: 24e03daee338226488569ad30a0e7f4d,
+        type: 3}
+      propertyPath: walkSpeed
+      value: 0.05
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 24e03daee338226488569ad30a0e7f4d, type: 3}
