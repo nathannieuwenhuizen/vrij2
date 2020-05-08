@@ -17,6 +17,8 @@ public class LevelEditor : MonoBehaviour
     public ClickEvent clickevent;
 
 
+    public EditorObject[] props;
+
     [SerializeField]
     public EditorObject tileObject;
     [SerializeField]
@@ -25,17 +27,12 @@ public class LevelEditor : MonoBehaviour
     private EditorObject pillarObject;
 
     [SerializeField]
-    private GameObject pillarPrefab;
-
-
-    [SerializeField]
-    private GameObject pillarParent;
-
-    [SerializeField]
     private GameObject hoverObject;
 
     [SerializeField]
     private Material hoverMaterial;
+
+    private EditorObject selectedObject;
 
     [SerializeField]
     private int tileSize = 5;
@@ -47,27 +44,33 @@ public class LevelEditor : MonoBehaviour
         set { tileSize = value; }
     }
 
-    public List<GameObject> CreateList(GameObject parent)
+    public EditorObject SelectedObject
     {
+        get { return selectedObject; }
+        set { selectedObject = value; }
+    }
+
+    public void UpdateList(EditorObject obj)
+    {
+        obj.FindParent(this);
+
         List<GameObject> list = new List<GameObject>();
-        Transform[] children = parent.GetComponentsInChildren<Transform>();
+        Transform[] children = obj.parent.GetComponentsInChildren<Transform>();
         for (int i = 0; i < children.Length; i++)
         {
-            if (children[i] != parent.transform)
+            if (children[i] != obj.parent)
             {
                 list.Add(children[i].gameObject);
             }
         }
-        return list;
     }
 
     public void EditEvent(Vector3 startPos, Vector3 endPos)
     {
 
-        Debug.Log("children count | " + transform.childCount);
-        tileObject.list = CreateList(tileObject.parent);
-        wallObject.list = CreateList(wallObject.parent);
-        pillarObject.list = CreateList(pillarObject.parent);
+        UpdateList(tileObject);
+        UpdateList(wallObject);
+        UpdateList(pillarObject);
 
         //round at position;
         startPos = new Vector3(Mathf.Round(startPos.x / tileSize) * tileSize, Mathf.Round(startPos.y / tileSize) * tileSize, Mathf.Round(startPos.z / tileSize) * tileSize);
@@ -120,6 +123,13 @@ public class LevelEditor : MonoBehaviour
 
     }
 
+    public Transform createEMptyGameObject(string name)
+    {
+        GameObject newObj = new GameObject(name);
+        newObj.transform.parent = transform;
+        return newObj.transform;
+    }
+
     public void SpawnObject(EditorObject obj, Vector3 position, float rotation = 0)
     {
         //Debug.Log("Spawn Obj");
@@ -127,7 +137,7 @@ public class LevelEditor : MonoBehaviour
 
         //instantiatePrefab
         GameObject prefab_instance = PrefabUtility.InstantiatePrefab(obj.prefab as GameObject) as GameObject;
-        prefab_instance.transform.parent = obj.parent.transform;
+        prefab_instance.transform.parent = obj.parent;
         prefab_instance.transform.position = position;
 
         prefab_instance.transform.Rotate(new Vector3(0, rotation, 0));
@@ -135,6 +145,15 @@ public class LevelEditor : MonoBehaviour
         obj.list.Add(prefab_instance);
     }
 
+    public void RemoveObject(EditorObject obj, Vector3 position)
+    {
+        GameObject selectedObj = DetectedObject(obj, position);
+        if (selectedObj != null)
+        {
+            DestroyImmediate(selectedObj.gameObject);
+            obj.list.Remove(selectedObj);
+        }
+    }
 
 
     public void RemoveSurroundingWalls(Vector3 pos)
@@ -190,8 +209,6 @@ public class LevelEditor : MonoBehaviour
                 {
                     up = true;
                 }
-
-                Debug.Log("neighbour is past check");
 
                 //spawn pillars
                 if (left == up && left != directionIsNull)
@@ -370,15 +387,6 @@ public class LevelEditor : MonoBehaviour
         return result.ToArray();
     }
 
-    public void RemoveObject(EditorObject obj, Vector3 position)
-    {
-        GameObject selectedObj = DetectedObject(obj, position);
-        if (selectedObj != null)
-        {
-            DestroyImmediate(selectedObj.gameObject);
-            obj.list.Remove(selectedObj);
-        }
-    }
 
     public GameObject DetectedObject(EditorObject obj, Vector3 position)
     {
@@ -394,6 +402,19 @@ public class LevelEditor : MonoBehaviour
 public class EditorObject
 {
     public GameObject prefab;
-    public GameObject parent;
+    [HideInInspector]
+    public Transform parent;
+    public void FindParent(LevelEditor origin)
+    {
+        if (parent == null)
+        {
+            parent = origin.transform.Find(prefab.name + " holder");
+            if (parent == null)
+            {
+                parent = origin.createEMptyGameObject(prefab.name + " holder");
+            }
+        }
+    }
+    [HideInInspector]
     public List<GameObject> list = new List<GameObject>();
 }

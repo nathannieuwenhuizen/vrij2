@@ -41,6 +41,10 @@ public class ObjectGroupInspector : Editor
         } // End if __editMode
     } // End OnSceneGUI
 
+
+    string[] _choices = new[] { "foo", "foobar" };
+    int _choiceIndex = 0;
+
     public override void OnInspectorGUI()
     {
 
@@ -53,7 +57,25 @@ public class ObjectGroupInspector : Editor
                 //myScript.PlaceRocks();
             }
         }
-        AssetPreview.GetMiniThumbnail(myScript.tileObject.prefab);
+
+        _choiceIndex = EditorGUILayout.Popup(_choiceIndex, toStringArray(myScript));
+
+        myScript.SelectedObject = myScript.props[_choiceIndex];
+        // Save the changes back to the object
+        EditorUtility.SetDirty(target);
+    }
+
+    public string[] toStringArray(LevelEditor script)
+    {
+        string[] result = new string[script.props.Length];
+        for (int i = 0; i < script.props.Length; i++)
+        {
+            if (script.props[i].prefab != null)
+            {
+                result[i] = script.props[i].prefab.name;
+            }
+        }
+        return result;
     }
 
 
