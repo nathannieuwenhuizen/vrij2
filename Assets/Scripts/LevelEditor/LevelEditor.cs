@@ -16,17 +16,21 @@ public class LevelEditor : MonoBehaviour
     public bool editmode = true;
     public ClickEvent clickevent;
 
+
     [SerializeField]
-    private GameObject tilePrefab;
+    private EditorObject tileObject;
 
     [SerializeField]
     private GameObject wallPrefab;
 
     [SerializeField]
-    private GameObject tilesParent;
+    private GameObject pillarPrefab;
 
     [SerializeField]
     private GameObject wallParent;
+
+    [SerializeField]
+    private GameObject pillarParent;
 
     [SerializeField]
     private GameObject hoverObject;
@@ -37,8 +41,8 @@ public class LevelEditor : MonoBehaviour
     [SerializeField]
     private int tileSize = 5;
 
-    private List<GameObject> floorTiles = new List<GameObject>();
-    private List<GameObject> walls = new List<GameObject>();
+    private List<GameObject> walls = new List<GameObject>(); 
+    private List<GameObject> pillars = new List<GameObject>();
 
     [SerializeField]
     public int Size
@@ -53,7 +57,7 @@ public class LevelEditor : MonoBehaviour
         Transform[] children = parent.GetComponentsInChildren<Transform>();
         for (int i = 0; i < children.Length; i++)
         {
-            if (children[i] != tilesParent.transform)
+            if (children[i] != parent.transform)
             {
                 list.Add(children[i].gameObject);
             }
@@ -63,8 +67,10 @@ public class LevelEditor : MonoBehaviour
 
     public void EditEvent(Vector3 startPos, Vector3 endPos)
     {
-        floorTiles = CreateList(tilesParent);
+        tileObject.list = CreateList(tileObject.parent);
+        
         walls = CreateList(wallParent);
+        pillars = CreateList(pillarParent);
 
         //round at position;
         startPos = new Vector3(Mathf.Round(startPos.x / tileSize) * tileSize, Mathf.Round(startPos.y / tileSize) * tileSize, Mathf.Round(startPos.z / tileSize) * tileSize);
@@ -75,7 +81,7 @@ public class LevelEditor : MonoBehaviour
         {
             foreach (Vector3 tilePos in grid)
             {
-                SpawnObject(tilePos, tilesParent, floorTiles);
+                SpawnObject(tilePos, tileObject.parent, tileObject.list);
             }
             UpdateWalls(grid);
 
@@ -102,8 +108,8 @@ public class LevelEditor : MonoBehaviour
     {
         if (hoverObject == null)
         {
-            return;
-            hoverObject = Instantiate(tilePrefab, transform);
+            return; //gaf bugs...
+            hoverObject = Instantiate(tileObject.prefab, transform);
         }
         hoverObject.GetComponentInChildren<MeshRenderer>().material = hoverMaterial;
         if (clickevent == ClickEvent.remove)
@@ -129,49 +135,55 @@ public class LevelEditor : MonoBehaviour
         prefab_instance.transform.Rotate(new Vector3(0, rotation, 0));
         //add to list
         walls.Add(prefab_instance);
+    }
 
+    public void SpawnObject(Vector3 position, GameObject parent, List<GameObject> list)
+    {
+        if (DetectedFloor(position) != null) { return; }
+
+        //instantiatePrefab
+        GameObject prefab_instance = PrefabUtility.InstantiatePrefab(tileObject.prefab as GameObject) as GameObject;
+        prefab_instance.transform.parent = parent.transform;
+        prefab_instance.transform.position = position;
+
+        //add to list
+        list.Add(prefab_instance);
+
+    }
+
+
+    public void RemoveSurroundingWalls(Vector3 pos)
+    {
+        RemovePotentialWall(pos + new Vector3(-tileSize / 2f, 0, 0));
+        RemovePotentialWall(pos + new Vector3(tileSize / 2f, 0, 0));
+        RemovePotentialWall(pos + new Vector3(0, 0, -tileSize / 2f));
+        RemovePotentialWall(pos + new Vector3(0, 0, tileSize / 2f));
     }
 
     public void UpdateWalls(Vector3[] positions)
     {
         foreach (Vector3 pos in positions)
         {
-            RemovePotentialWall(pos + new Vector3(-tileSize / 2f, 0, 0));
-            RemovePotentialWall(pos + new Vector3(tileSize / 2f, 0, 0));
-            RemovePotentialWall(pos + new Vector3(0, 0, -tileSize / 2f));
-            RemovePotentialWall(pos + new Vector3(0, 0, tileSize / 2f));
-
+            RemoveSurroundingWalls(pos);
             //left
             if (pos.x == positions[0].x)
             {
-                if (DetectedFloor(pos + new Vector3(-tileSize, 0, 0)) == null)
-                {
-                    SpawnWall(pos, new Vector3(-tileSize / 2f, 0, 0), 90);
-                }
+                if (DetectedFloor(pos + new Vector3(-tileSize, 0, 0)) == null){ SpawnWall(pos, new Vector3(-tileSize / 2f, 0, 0), 90); }
             }
             //right
             if (pos.x == positions[positions.Length - 1].x)
             {
-                if (DetectedFloor(pos + new Vector3(tileSize, 0, 0)) == null)
-                {
-                    SpawnWall(pos, new Vector3(tileSize / 2f, 0, 0) , -90);
-                }
+                if (DetectedFloor(pos + new Vector3(tileSize, 0, 0)) == null){SpawnWall(pos, new Vector3(tileSize / 2f, 0, 0) , -90); }
             }
             //bottom 
             if (pos.z == positions[0].z)
             {
-                if (DetectedFloor(pos + new Vector3(0, 0, -tileSize)) == null)
-                {
-                    SpawnWall(pos, new Vector3(0, 0, -tileSize / 2f) , 180);
-                }
+                if (DetectedFloor(pos + new Vector3(0, 0, -tileSize)) == null){ SpawnWall(pos, new Vector3(0, 0, -tileSize / 2f) , 180); }
             }
             //top
             if (pos.z == positions[positions.Length - 1].z)
             {
-                if (DetectedFloor(pos + new Vector3(0, 0, tileSize)) == null)
-                {
-                    SpawnWall(pos, new Vector3(0, 0, tileSize / 2f));
-                }
+                if (DetectedFloor(pos + new Vector3(0, 0, tileSize)) == null) {   SpawnWall(pos, new Vector3(0, 0, tileSize / 2f));  }
             }
         }
     }
@@ -179,42 +191,27 @@ public class LevelEditor : MonoBehaviour
     {
         foreach (Vector3 pos in positions)
         {
-            RemovePotentialWall(pos + new Vector3(-tileSize / 2f, 0, 0));
-            RemovePotentialWall(pos + new Vector3(tileSize / 2f, 0, 0));
-            RemovePotentialWall(pos + new Vector3(0, 0, -tileSize / 2f));
-            RemovePotentialWall(pos + new Vector3(0, 0, tileSize / 2f));
+            RemoveSurroundingWalls(pos);
 
             //left
             if (pos.x == positions[0].x)
             {
-                if (DetectedFloor(pos + new Vector3(-tileSize, 0, 0)) != null)
-                {
-                    SpawnWall(pos, new Vector3(-tileSize / 2f, 0, 0) , 90);
-                }
+                if (DetectedFloor(pos + new Vector3(-tileSize, 0, 0)) != null){ SpawnWall(pos, new Vector3(-tileSize / 2f, 0, 0), 90); }
             }
             //right
             if (pos.x == positions[positions.Length - 1].x)
             {
-                if (DetectedFloor(pos + new Vector3(tileSize, 0, 0)) != null)
-                {
-                    SpawnWall(pos, new Vector3(tileSize / 2f, 0, 0) , -90);
-                }
+                if (DetectedFloor(pos + new Vector3(tileSize, 0, 0)) != null){SpawnWall(pos, new Vector3(tileSize / 2f, 0, 0) , -90); }
             }
             //bottom 
             if (pos.z == positions[0].z)
             {
-                if (DetectedFloor(pos + new Vector3(0, 0, -tileSize)) != null)
-                {
-                    SpawnWall(pos, new Vector3(0, 0, -tileSize / 2f), 180);
-                }
+                if (DetectedFloor(pos + new Vector3(0, 0, -tileSize)) != null){ SpawnWall(pos, new Vector3(0, 0, -tileSize / 2f) , 180); }
             }
             //top
             if (pos.z == positions[positions.Length - 1].z)
             {
-                if (DetectedFloor(pos + new Vector3(0, 0, tileSize)) != null)
-                {
-                    SpawnWall(pos, new Vector3(0, 0, tileSize / 2f));
-                }
+                if (DetectedFloor(pos + new Vector3(0, 0, tileSize)) != null) {   SpawnWall(pos, new Vector3(0, 0, tileSize / 2f));  }
             }
         }
     }
@@ -242,26 +239,13 @@ public class LevelEditor : MonoBehaviour
         return result.ToArray();
     }
 
-    public void SpawnObject(Vector3 position, GameObject parent, List<GameObject> list)
-    {
-        if (DetectedFloor(position) != null) { return; }
-
-        //instantiatePrefab
-        GameObject prefab_instance = PrefabUtility.InstantiatePrefab(tilePrefab as GameObject) as GameObject;
-        prefab_instance.transform.parent = parent.transform;
-        prefab_instance.transform.position = position;
-
-        //add to list
-        list.Add(prefab_instance);
-
-    }
     public void RemoveObject(Vector3 position)
     {
         GameObject selectedTile = DetectedFloor(position);
         if (selectedTile != null)
         {
             DestroyImmediate(selectedTile.gameObject);
-            floorTiles.Remove(selectedTile);
+            tileObject.list.Remove(selectedTile);
         }
     }
     public void RemovePotentialWall(Vector3 position)
@@ -276,7 +260,7 @@ public class LevelEditor : MonoBehaviour
 
     public GameObject DetectedFloor(Vector3 position)
     {
-        return floorTiles.Find(x => {
+        return tileObject.list.Find(x => {
             if (x == null) { return false; }
             return x.transform.position == position;
         }
@@ -291,7 +275,14 @@ public class LevelEditor : MonoBehaviour
         }
         );
     }
+}
 
+[System.Serializable]
+public class EditorObject
+{
+    public GameObject prefab;
+    public GameObject parent;
+    public List<GameObject> list = new List<GameObject>();
 }
 //public class FloorTile
 //{
