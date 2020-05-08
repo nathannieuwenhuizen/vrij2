@@ -9,6 +9,13 @@ public enum ClickEvent
     add,
     remove
 }
+public enum Orientation
+{
+    left,
+    right, 
+    forth,
+    back
+}
 
 
 public class LevelEditor : MonoBehaviour
@@ -16,6 +23,15 @@ public class LevelEditor : MonoBehaviour
     public bool editmode = true;
     public ClickEvent clickevent;
 
+    private float propRotation = 0;
+    private Orientation propOrientation = Orientation.forth;
+
+
+    [SerializeField]
+    private bool PropAtWall = false;
+    [Range(0, 1f)]
+    [SerializeField]
+    private float distanceToWall = 0.8f;
 
     public EditorObject[] props;
 
@@ -34,6 +50,8 @@ public class LevelEditor : MonoBehaviour
 
     private EditorObject selectedObject;
 
+
+
     [SerializeField]
     private int tileSize = 5;
 
@@ -47,7 +65,50 @@ public class LevelEditor : MonoBehaviour
     public EditorObject SelectedObject
     {
         get { return selectedObject; }
-        set { selectedObject = value; }
+        set {
+            selectedObject = value;
+            UpdateHoverObject();
+
+        }
+    }
+
+    public Orientation PropOrientation
+    {
+        get { return propOrientation; }
+        set {
+            propOrientation = value;
+            float rotation = 0;
+            switch (propOrientation)
+            {
+                case Orientation.left:
+                    rotation = -90;
+                    break;
+                case Orientation.right:
+                    rotation = 90;
+                    break;
+                case Orientation.back:
+                    rotation = 180;
+                    break;
+            }
+            propRotation = rotation;
+            if (hoverObject != null) {
+                hoverObject.transform.rotation = Quaternion.Euler(new Vector3(0, propRotation, 0));
+            }
+        }
+    }
+
+    public void UpdateHoverObject()
+    {
+        if (hoverObject != null)
+        {
+            DestroyImmediate(hoverObject.gameObject);
+            hoverObject = null;
+        }
+        if (hoverObject == null)
+        {
+            hoverObject = Instantiate(selectedObject.prefab, transform);
+            CheckHover();
+        }
     }
 
     public void UpdateList(EditorObject obj)
@@ -67,49 +128,102 @@ public class LevelEditor : MonoBehaviour
 
     public void EditEvent(Vector3 startPos, Vector3 endPos)
     {
-
         UpdateList(tileObject);
         UpdateList(wallObject);
         UpdateList(pillarObject);
+        UpdateList(selectedObject);
+
 
         //round at position;
         startPos = new Vector3(Mathf.Round(startPos.x / tileSize) * tileSize, Mathf.Round(startPos.y / tileSize) * tileSize, Mathf.Round(startPos.z / tileSize) * tileSize);
         endPos = new Vector3(Mathf.Round(endPos.x / tileSize) * tileSize, Mathf.Round(endPos.y / tileSize) * tileSize, Mathf.Round(endPos.z / tileSize) * tileSize);
-        Vector3[] grid = gridPositions(startPos, endPos);
 
-        if (clickevent == ClickEvent.add)
+        if (selectedObject == tileObject)
         {
-            foreach (Vector3 tilePos in grid)
+            Vector3[] grid = gridPositions(startPos, endPos);
+            if (clickevent == ClickEvent.add)
             {
-                SpawnObject(tileObject, tilePos);
-            }
-            UpdateWalls(grid);
+                foreach (Vector3 tilePos in grid)
+                {
+                    SpawnObject(tileObject, tilePos);
+                }
+                UpdateWalls(grid);
 
+            }
+            if (clickevent == ClickEvent.remove)
+            {
+                foreach (Vector3 tilePos in grid)
+                {
+                    RemoveObject(tileObject, tilePos);
+                }
+                UpdateWallsWhenRemove(grid);
+            }
         }
-        if (clickevent == ClickEvent.remove)
+        else
         {
-            foreach (Vector3 tilePos in grid)
+            if (clickevent == ClickEvent.add)
             {
-                RemoveObject(tileObject, tilePos);
+                SpawnObject(selectedObject, PropAtWall ? hoverObject.transform.position : endPos, PropAtWall ? hoverObject.transform.rotation.eulerAngles.y : propRotation);
             }
-            UpdateWallsWhenRemove(grid);
+            if (clickevent == ClickEvent.remove)
+            {
+                RemoveObject(selectedObject, PropAtWall ? hoverObject.transform.position : endPos);
+            }
 
         }
 
     }
 
-    public void UpdateHover(Vector3 position)
+    public void UpdateHovePosition(Vector3 position)
     {
         CheckHover();
-        position = new Vector3(Mathf.Round(position.x / tileSize) * tileSize, Mathf.Round(position.y / tileSize) * tileSize, Mathf.Round(position.z / tileSize) * tileSize);
-        hoverObject.transform.position = position;
+        Vector3 roundedUpPos = new Vector3(
+            Mathf.Round(position.x / tileSize) * tileSize, 
+            Mathf.Round(position.y / tileSize) * tileSize, 
+            Mathf.Round(position.z / tileSize) * tileSize);
+
+        hoverObject.transform.position = roundedUpPos;
+        if (PropAtWall && selectedObject != tileObject)
+        {
+            float closestDistance = tileSize * 200f;
+            GameObject wallToAttach = null;
+
+            Vector3[] positions = {
+            new Vector3(0, 0, tileSize / 2f),
+            new Vector3(0, 0, -tileSize /2f),
+            new Vector3(tileSize /2f, 0, 0),
+            new Vector3(-tileSize /2f, 0, 0) };
+
+            foreach (Vector3 pos in positions)
+            {
+                GameObject wall = DetectedObject(wallObject, roundedUpPos + pos);
+                if (wall != null)
+                {
+                    float dist = Vector3.Distance(position, wall.transform.position);
+                    if (dist < closestDistance) 
+                    {
+                        closestDistance = dist;
+                        wallToAttach = wall;
+                    }
+                }
+            }
+            if (wallToAttach != null)
+            {
+                hoverObject.transform.position =  roundedUpPos + (wallToAttach.transform.position - roundedUpPos) * distanceToWall;
+
+                hoverObject.transform.rotation = wallToAttach.transform.rotation;
+            }
+        }
+        else {
+            hoverObject.transform.rotation = hoverObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+
     }
     public void CheckHover()
     {
         if (hoverObject == null)
         {
-            return; //gaf bugs...
-            hoverObject = Instantiate(tileObject.prefab, transform);
+            return;
         }
         hoverObject.GetComponentInChildren<MeshRenderer>().material = hoverMaterial;
         if (clickevent == ClickEvent.remove)

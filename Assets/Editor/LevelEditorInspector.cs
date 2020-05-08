@@ -33,7 +33,7 @@ public class ObjectGroupInspector : Editor
                 }
             }
 
-            myScript.UpdateHover(GetSpawnPosition(new Vector3(0, 0, 0)));
+            myScript.UpdateHovePosition(GetSpawnPosition(new Vector3(0, 0, 0)));
 
             // Mark the event as used
             Event.current.Use();
@@ -44,6 +44,9 @@ public class ObjectGroupInspector : Editor
 
     string[] _choices = new[] { "foo", "foobar" };
     int _choiceIndex = 0;
+    int _oldChoiceIndex = 0;
+
+    int orientationChoice = 0;
 
     public override void OnInspectorGUI()
     {
@@ -57,24 +60,43 @@ public class ObjectGroupInspector : Editor
                 //myScript.PlaceRocks();
             }
         }
-
         _choiceIndex = EditorGUILayout.Popup(_choiceIndex, toStringArray(myScript));
+        if (_choiceIndex != _oldChoiceIndex)
+        {
+            Debug.Log("Choice index: " + _choiceIndex);
+            if (_choiceIndex == 0)
+            {
+                myScript.SelectedObject = myScript.tileObject;
+            }
+            else
+            {
+                myScript.SelectedObject = myScript.props[_choiceIndex - 1];
+            }
+        }
+        _oldChoiceIndex = _choiceIndex;
 
-        myScript.SelectedObject = myScript.props[_choiceIndex];
+
+        orientationChoice = EditorGUILayout.Popup(orientationChoice, new string[] { "left", "right", "front", "back" });
+        myScript.PropOrientation = (Orientation)orientationChoice;
+
+
+
         // Save the changes back to the object
-        EditorUtility.SetDirty(target);
+        EditorUtility.SetDirty(myScript);
     }
 
     public string[] toStringArray(LevelEditor script)
     {
-        string[] result = new string[script.props.Length];
+        string[] result = new string[script.props.Length + 1];
         for (int i = 0; i < script.props.Length; i++)
         {
             if (script.props[i].prefab != null)
             {
-                result[i] = script.props[i].prefab.name;
+                result[i + 1] = script.props[i].prefab.name;
             }
         }
+
+        result[0] = "floor";
         return result;
     }
 
