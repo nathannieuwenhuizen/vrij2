@@ -18,16 +18,15 @@ public class LevelEditor : MonoBehaviour
 
 
     [SerializeField]
-    private EditorObject tileObject;
-
+    public EditorObject tileObject;
     [SerializeField]
-    private GameObject wallPrefab;
+    private EditorObject wallObject;
+    [SerializeField]
+    private EditorObject pillarObject;
 
     [SerializeField]
     private GameObject pillarPrefab;
 
-    [SerializeField]
-    private GameObject wallParent;
 
     [SerializeField]
     private GameObject pillarParent;
@@ -40,9 +39,6 @@ public class LevelEditor : MonoBehaviour
 
     [SerializeField]
     private int tileSize = 5;
-
-    private List<GameObject> walls = new List<GameObject>(); 
-    private List<GameObject> pillars = new List<GameObject>();
 
     [SerializeField]
     public int Size
@@ -67,10 +63,11 @@ public class LevelEditor : MonoBehaviour
 
     public void EditEvent(Vector3 startPos, Vector3 endPos)
     {
+
+        Debug.Log("children count | " + transform.childCount);
         tileObject.list = CreateList(tileObject.parent);
-        
-        walls = CreateList(wallParent);
-        pillars = CreateList(pillarParent);
+        wallObject.list = CreateList(wallObject.parent);
+        pillarObject.list = CreateList(pillarObject.parent);
 
         //round at position;
         startPos = new Vector3(Mathf.Round(startPos.x / tileSize) * tileSize, Mathf.Round(startPos.y / tileSize) * tileSize, Mathf.Round(startPos.z / tileSize) * tileSize);
@@ -81,7 +78,7 @@ public class LevelEditor : MonoBehaviour
         {
             foreach (Vector3 tilePos in grid)
             {
-                SpawnObject(tilePos, tileObject.parent, tileObject.list);
+                SpawnObject(tileObject, tilePos);
             }
             UpdateWalls(grid);
 
@@ -90,7 +87,7 @@ public class LevelEditor : MonoBehaviour
         {
             foreach (Vector3 tilePos in grid)
             {
-                RemoveObject(tilePos);
+                RemoveObject(tileObject, tilePos);
             }
             UpdateWallsWhenRemove(grid);
 
@@ -123,41 +120,100 @@ public class LevelEditor : MonoBehaviour
 
     }
 
-    public void SpawnWall(Vector3 position, Vector3 offset, float rotation = 0)
+    public void SpawnObject(EditorObject obj, Vector3 position, float rotation = 0)
     {
-        if (DetectedFloor(position +offset) != null) { return; }
+        //Debug.Log("Spawn Obj");
+        if (DetectedObject(obj, position) != null) { return; } //check if object is already placed there somehow.
 
         //instantiatePrefab
-        GameObject prefab_instance = PrefabUtility.InstantiatePrefab(wallPrefab as GameObject) as GameObject;
-        prefab_instance.transform.parent = wallParent.transform;
-        prefab_instance.transform.position = position + offset;
+        GameObject prefab_instance = PrefabUtility.InstantiatePrefab(obj.prefab as GameObject) as GameObject;
+        prefab_instance.transform.parent = obj.parent.transform;
+        prefab_instance.transform.position = position;
 
         prefab_instance.transform.Rotate(new Vector3(0, rotation, 0));
         //add to list
-        walls.Add(prefab_instance);
+        obj.list.Add(prefab_instance);
     }
 
-    public void SpawnObject(Vector3 position, GameObject parent, List<GameObject> list)
-    {
-        if (DetectedFloor(position) != null) { return; }
-
-        //instantiatePrefab
-        GameObject prefab_instance = PrefabUtility.InstantiatePrefab(tileObject.prefab as GameObject) as GameObject;
-        prefab_instance.transform.parent = parent.transform;
-        prefab_instance.transform.position = position;
-
-        //add to list
-        list.Add(prefab_instance);
-
-    }
 
 
     public void RemoveSurroundingWalls(Vector3 pos)
     {
-        RemovePotentialWall(pos + new Vector3(-tileSize / 2f, 0, 0));
-        RemovePotentialWall(pos + new Vector3(tileSize / 2f, 0, 0));
-        RemovePotentialWall(pos + new Vector3(0, 0, -tileSize / 2f));
-        RemovePotentialWall(pos + new Vector3(0, 0, tileSize / 2f));
+        RemoveObject(wallObject, pos + new Vector3(-tileSize / 2f, 0, 0));
+        RemoveObject(wallObject, pos + new Vector3(tileSize / 2f, 0, 0));
+        RemoveObject(wallObject, pos + new Vector3(0, 0, -tileSize / 2f));
+        RemoveObject(wallObject, pos + new Vector3(0, 0, tileSize / 2f));
+
+        RemoveObject(pillarObject, pos + new Vector3(-tileSize / 2f, 0, -tileSize /2f));
+        RemoveObject(pillarObject, pos + new Vector3(tileSize / 2f, 0, -tileSize /2f));
+        RemoveObject(pillarObject, pos + new Vector3(-tileSize / 2f, 0, tileSize /2f));
+        RemoveObject(pillarObject, pos + new Vector3(tileSize / 2f, 0, tileSize /2f));
+    }
+
+    public void UpdateNeighBourPillars(Vector3 position)
+    {
+        bool originIsNull = DetectedObject(tileObject, position) == null;
+        Vector3[] positions = {
+            new Vector3(0, 0, tileSize),
+            new Vector3(0, 0, -tileSize),
+            new Vector3(tileSize, 0, 0),
+            new Vector3(-tileSize, 0, 0),
+
+            new Vector3(tileSize, 0, tileSize),
+            new Vector3(-tileSize, 0, tileSize),
+            new Vector3(tileSize, 0, -tileSize),
+            new Vector3(-tileSize, 0, -tileSize),
+        };
+
+        foreach(Vector3 pos in positions)
+        {
+            bool directionIsNull = DetectedObject(tileObject, position + pos) == null;
+            if (directionIsNull != originIsNull)
+            {
+                bool left = false;
+                bool up = false;
+                bool right = false;
+                bool down = false;
+                if (DetectedObject(tileObject, position + pos + new Vector3(-tileSize, 0, 0)) == null)
+                {
+                    left = true;
+                }
+                if (DetectedObject(tileObject, position + pos + new Vector3(tileSize, 0, 0)) == null)
+                {
+                    right = true;
+                }
+                if (DetectedObject(tileObject, position + pos + new Vector3(0, 0, -tileSize)) == null)
+                {
+                    down = true;
+                }
+                if (DetectedObject(tileObject, position + pos + new Vector3(0, 0, tileSize)) == null)
+                {
+                    up = true;
+                }
+
+                Debug.Log("neighbour is past check");
+
+                //spawn pillars
+                if (left == up && left != directionIsNull)
+                {
+                    SpawnObject(pillarObject, position + pos + new Vector3(-tileSize / 2f, 0, tileSize / 2f));
+                }
+                if (left == down && left != directionIsNull)
+                {
+                    SpawnObject(pillarObject, position + pos + new Vector3(-tileSize / 2f, 0, -tileSize / 2f));
+                }
+                if (right == up && right != directionIsNull)
+                {
+                    SpawnObject(pillarObject, position + pos + new Vector3(tileSize / 2f, 0, tileSize / 2f));
+                }
+                if (right == down && right != directionIsNull)
+                {
+                    SpawnObject(pillarObject, position + pos + new Vector3(tileSize / 2f, 0, -tileSize / 2f));
+                }
+
+
+            }
+        }
     }
 
     public void UpdateWalls(Vector3[] positions)
@@ -166,24 +222,66 @@ public class LevelEditor : MonoBehaviour
         {
             RemoveSurroundingWalls(pos);
             //left
+            bool left = false;
+            bool up = false;
+            bool right = false;
+            bool down = false;
+
             if (pos.x == positions[0].x)
             {
-                if (DetectedFloor(pos + new Vector3(-tileSize, 0, 0)) == null){ SpawnWall(pos, new Vector3(-tileSize / 2f, 0, 0), 90); }
+                if (DetectedObject(tileObject, pos + new Vector3(-tileSize, 0, 0)) == null){
+                    left = true;
+                    SpawnObject(wallObject, pos + new Vector3(-tileSize / 2f, 0, 0), 90);
+                }
+
             }
             //right
             if (pos.x == positions[positions.Length - 1].x)
             {
-                if (DetectedFloor(pos + new Vector3(tileSize, 0, 0)) == null){SpawnWall(pos, new Vector3(tileSize / 2f, 0, 0) , -90); }
+                if (DetectedObject(tileObject, pos + new Vector3(tileSize, 0, 0)) == null){
+                    right = true;
+                    SpawnObject(wallObject, pos + new Vector3(tileSize / 2f, 0, 0) , -90);
+                }
             }
             //bottom 
             if (pos.z == positions[0].z)
             {
-                if (DetectedFloor(pos + new Vector3(0, 0, -tileSize)) == null){ SpawnWall(pos, new Vector3(0, 0, -tileSize / 2f) , 180); }
+                if (DetectedObject(tileObject, pos + new Vector3(0, 0, -tileSize)) == null){
+                    down = true;
+                    SpawnObject(wallObject, pos + new Vector3(0, 0, -tileSize / 2f) , 180);
+                }
             }
             //top
             if (pos.z == positions[positions.Length - 1].z)
             {
-                if (DetectedFloor(pos + new Vector3(0, 0, tileSize)) == null) {   SpawnWall(pos, new Vector3(0, 0, tileSize / 2f));  }
+                if (DetectedObject(tileObject, pos + new Vector3(0, 0, tileSize)) == null) {
+                    up = true;
+                    SpawnObject(wallObject, pos + new Vector3(0, 0, tileSize / 2f));
+                }
+            }
+
+            //spawn pillars
+            if (left == true && up == true)
+            {
+                SpawnObject(pillarObject, pos + new Vector3(-tileSize /2f, 0, tileSize /2f));
+            }
+            if (left == true && down == true)
+            {
+                SpawnObject(pillarObject, pos + new Vector3(-tileSize /2f, 0, -tileSize /2f));
+            }
+            if (right == true && up == true)
+            {
+                SpawnObject(pillarObject, pos + new Vector3(tileSize /2f, 0, tileSize /2f));
+            }
+            if (right == true && down == true)
+            {
+                SpawnObject(pillarObject, pos + new Vector3(tileSize /2f, 0, -tileSize /2f));
+            }
+
+            //spawnneighbourPillars
+            if (left || right || up || down)
+            {
+                UpdateNeighBourPillars(pos);
             }
         }
     }
@@ -193,26 +291,59 @@ public class LevelEditor : MonoBehaviour
         {
             RemoveSurroundingWalls(pos);
 
+
+            bool left = false;
+            bool up = false;
+            bool right = false;
+            bool down = false;
+
+
             //left
             if (pos.x == positions[0].x)
             {
-                if (DetectedFloor(pos + new Vector3(-tileSize, 0, 0)) != null){ SpawnWall(pos, new Vector3(-tileSize / 2f, 0, 0), 90); }
+                if (DetectedObject(tileObject, pos + new Vector3(-tileSize, 0, 0)) != null){ left = true; SpawnObject(wallObject, pos + new Vector3(-tileSize / 2f, 0, 0), 90); }
             }
             //right
             if (pos.x == positions[positions.Length - 1].x)
             {
-                if (DetectedFloor(pos + new Vector3(tileSize, 0, 0)) != null){SpawnWall(pos, new Vector3(tileSize / 2f, 0, 0) , -90); }
+                if (DetectedObject(tileObject, pos + new Vector3(tileSize, 0, 0)) != null){ right = true; SpawnObject(wallObject, pos + new Vector3(tileSize / 2f, 0, 0) , -90); }
             }
             //bottom 
             if (pos.z == positions[0].z)
             {
-                if (DetectedFloor(pos + new Vector3(0, 0, -tileSize)) != null){ SpawnWall(pos, new Vector3(0, 0, -tileSize / 2f) , 180); }
+                if (DetectedObject(tileObject, pos + new Vector3(0, 0, -tileSize)) != null){ down = true; SpawnObject(wallObject, pos + new Vector3(0, 0, -tileSize / 2f) , 180); }
             }
             //top
             if (pos.z == positions[positions.Length - 1].z)
             {
-                if (DetectedFloor(pos + new Vector3(0, 0, tileSize)) != null) {   SpawnWall(pos, new Vector3(0, 0, tileSize / 2f));  }
+                if (DetectedObject(tileObject, pos + new Vector3(0, 0, tileSize)) != null) { up = true;  SpawnObject(wallObject, pos + new Vector3(0, 0, tileSize / 2f));  }
             }
+
+
+            //spawn pillars
+            if (left == true && up == true)
+            {
+                SpawnObject(pillarObject, pos + new Vector3(-tileSize / 2f, 0, tileSize / 2f));
+            }
+            if (left == true && down == true)
+            {
+                SpawnObject(pillarObject, pos + new Vector3(-tileSize / 2f, 0, -tileSize / 2f));
+            }
+            if (right == true && up == true)
+            {
+                SpawnObject(pillarObject, pos + new Vector3(tileSize / 2f, 0, tileSize / 2f));
+            }
+            if (right == true && down == true)
+            {
+                SpawnObject(pillarObject, pos + new Vector3(tileSize / 2f, 0, -tileSize / 2f));
+            }
+
+            //spawnneighbourPillars
+            if (left || right || up || down)
+            {
+                UpdateNeighBourPillars(pos);
+            }
+
         }
     }
 
@@ -239,37 +370,19 @@ public class LevelEditor : MonoBehaviour
         return result.ToArray();
     }
 
-    public void RemoveObject(Vector3 position)
+    public void RemoveObject(EditorObject obj, Vector3 position)
     {
-        GameObject selectedTile = DetectedFloor(position);
-        if (selectedTile != null)
+        GameObject selectedObj = DetectedObject(obj, position);
+        if (selectedObj != null)
         {
-            DestroyImmediate(selectedTile.gameObject);
-            tileObject.list.Remove(selectedTile);
-        }
-    }
-    public void RemovePotentialWall(Vector3 position)
-    {
-        GameObject selectedWall = DetectedWall(position);
-        if (selectedWall != null)
-        {
-            DestroyImmediate(selectedWall.gameObject);
-            walls.Remove(selectedWall);
+            DestroyImmediate(selectedObj.gameObject);
+            obj.list.Remove(selectedObj);
         }
     }
 
-    public GameObject DetectedFloor(Vector3 position)
+    public GameObject DetectedObject(EditorObject obj, Vector3 position)
     {
-        return tileObject.list.Find(x => {
-            if (x == null) { return false; }
-            return x.transform.position == position;
-        }
-        );
-    }
-
-    public GameObject DetectedWall(Vector3 position)
-    {
-        return walls.Find(x => {
+        return obj.list.Find(x => {
             if (x == null) { return false; }
             return x.transform.position == position;
         }
@@ -284,21 +397,3 @@ public class EditorObject
     public GameObject parent;
     public List<GameObject> list = new List<GameObject>();
 }
-//public class FloorTile
-//{
-//    public GameObject gameObject;
-//    public NeighBourGroup<FloorTile> neighbourTiles;
-//    public NeighBourGroup<GameObject> neighbourWalls;
-
-//    public void UpdateWalls()
-//    {
-//    }
-//}
-
-//public class NeighBourGroup<T>
-//{
-//    public T up;
-//    public T down;
-//    public T left;
-//    public T right;
-//}

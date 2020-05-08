@@ -41,6 +41,20 @@ public class ObjectGroupInspector : Editor
         } // End if __editMode
     } // End OnSceneGUI
 
+    public override void OnInspectorGUI()
+    {
+
+        DrawDefaultInspector();
+        LevelEditor myScript = (LevelEditor)target;
+        if (GUILayout.Button("Place Rock (will delete the previous rocks!)"))
+        {
+            if (myScript != null)
+            {
+                //myScript.PlaceRocks();
+            }
+        }
+        AssetPreview.GetMiniThumbnail(myScript.tileObject.prefab);
+    }
 
 
     public Vector3 GetSpawnPosition(Vector3 aPlayerPos)
