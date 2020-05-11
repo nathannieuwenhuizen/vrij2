@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class Settings
 {
-    public static float Volume
+    public static float Music
     {
         set
         {

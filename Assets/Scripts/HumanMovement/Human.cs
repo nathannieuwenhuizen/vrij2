@@ -143,8 +143,9 @@ public class ChaseState : IState
     public void Start()
     {
         human.spotLight.color = Color.red;
-
         human.movement.StartChase(human.foundGnome.transform);
+
+        AudioManager.instance?.FadeMusic(Music.guardSeesYou, 1f);
     }
 
     public void Run()
@@ -165,6 +166,7 @@ public class ChaseState : IState
 
     public void Exit()
     {
+        AudioManager.instance?.FadeMusic(Music.museum, 1f);
         human.movement.StopMovement();
     }
 

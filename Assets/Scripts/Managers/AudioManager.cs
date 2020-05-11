@@ -8,8 +8,7 @@ public enum AudioEffect
 }
 public enum Music
 {
-    menu,
-    level,
+    museum,
     guardSeesYou
 }
 
@@ -24,43 +23,30 @@ public class AudioManager : MonoBehaviour
     private List<MusicInstance> musicClips;
 
     private AudioSource musicSource;
+    private bool musicIsFading = false;
 
     public static AudioManager instance;
     void Awake()
     {
         instance = this;
         musicSource = GetComponent<AudioSource>();
+        musicSource.loop = true;
     }
 
-    public void PlaySound(AudioEffect audioEffect, float volume = -1, bool makeInstace = false)
+    public void PlaySound(AudioEffect audioEffect, float volume)
     {
         SFXInstance selectedAudio = soundEffectInstances.Find(x => x.audioEffect == audioEffect);
-
-        if (makeInstace)
-        {
-            selectedAudio = new SFXInstance();
-            GameObject newObj = Instantiate(selectedAudio.audioS.gameObject);
-            selectedAudio.audioS = newObj.GetComponent<AudioSource>();
-        }
+        if (selectedAudio == null) return;
         selectedAudio.audioS.spatialBlend = 0;
-        if (volume != -1)
-        {
-            selectedAudio.audioS.volume = volume * Settings.SFX;
-        }
+        selectedAudio.audioS.volume = volume * Settings.SFX;
         selectedAudio.audioS.Play();
     }
 
-
-    public void Play3DSound(AudioEffect audioEffect, float volume, Vector3 position, bool makeInstace = false, float pitch = 1)
+    public void Play3DSound(AudioEffect audioEffect, float volume, Vector3 position, float pitch = 1)
     {
         SFXInstance selectedAudio = soundEffectInstances.Find(x => x.audioEffect == audioEffect);
+        if (selectedAudio == null) return;
 
-        if (makeInstace)
-        {
-            selectedAudio = new SFXInstance();
-            GameObject newObj = Instantiate(selectedAudio.audioS.gameObject);
-            selectedAudio.audioS = newObj.GetComponent<AudioSource>();
-        }
         selectedAudio.audioS.pitch = pitch;
         selectedAudio.audioS.spatialBlend = 1;
         selectedAudio.audioS.gameObject.transform.position = position;
@@ -71,29 +57,62 @@ public class AudioManager : MonoBehaviour
     public void StopSound(AudioEffect audioEffect)
     {
         SFXInstance selectedAudio = soundEffectInstances.Find(x => x.audioEffect == audioEffect);
+        if (selectedAudio == null) return;
         selectedAudio.audioS.Stop();
     }
 
-    public void Playmusic(Music music, float volume = -1)
+    public void Playmusic(Music music, float volume)
     {
         MusicInstance selectedAudio = musicClips.Find(x => x.music == music);
+
         musicSource.clip = selectedAudio.clip;
 
-        if (volume != -1)
-        {
-            musicSource.volume = volume * Settings.SFX;
-        }
+        musicSource.volume = volume * Settings.Music;
         musicSource.Play();
 
     }
     public void StopMusic()
     {
         musicSource.Stop();
-
     }
+
     public void CHangeMusicVolume(float volume)
     {
-        musicSource.volume = volume;
+        musicSource.volume = volume * Settings.Music;
+    }
+    public void FadeMusic(Music music, float duration)
+    {
+        if (musicIsFading) return;
+        StartCoroutine(FadingMusic(music, duration));
+    }
+    private IEnumerator FadingMusic(Music music, float duration)
+    {
+        musicIsFading = true;
+        float volume = musicSource.volume;
+        yield return StartCoroutine(ChangeVolume(musicSource.volume, 0, duration / 2f));
+        MusicInstance selectedMusic = musicClips.Find(x => x.music == music);
+
+        if (selectedMusic != null)
+        {
+            musicSource.clip = selectedMusic.clip;
+            musicSource.Play();
+            yield return StartCoroutine(ChangeVolume(0, volume, duration / 2f));
+        }
+        musicIsFading = false;
+    }
+
+
+    private IEnumerator ChangeVolume(float begin, float end, float duration)
+    {
+        float index = 0;
+        
+        while (index < duration)
+        {
+            index += Time.deltaTime;
+            musicSource.volume = Mathf.Lerp(begin, end, index / duration);
+            yield return new WaitForFixedUpdate();
+        }
+        musicSource.volume = end;
     }
 }
 
