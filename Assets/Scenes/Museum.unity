@@ -17912,9 +17912,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7be656dd0a07c7942a1b5b45080334ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseScreen: {fileID: 0}
-  pauseButton: {fileID: 0}
-  fadeImage: {fileID: 0}
+  pauseScreen: {fileID: 915232437}
+  pauseButton: {fileID: 45081219}
+  fadeImage: {fileID: 1606628904}
 --- !u!4 &1711116678
 Transform:
   m_ObjectHideFlags: 0
