@@ -9,8 +9,6 @@ public static class Settings
         set
         {
             PlayerPrefs.SetFloat("Volume", value);
-            AudioListener.volume = value;
-
         }
         get
         {
@@ -23,8 +21,6 @@ public static class Settings
         set
         {
             PlayerPrefs.SetFloat("SFX", value);
-            AudioListener.volume = value;
-
         }
         get
         {

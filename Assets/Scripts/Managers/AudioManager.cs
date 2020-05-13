@@ -110,10 +110,12 @@ public class AudioManager : MonoBehaviour
     public void CHangeMusicVolume(float volume)
     {
         musicSource.volume = volume * Settings.Music;
-    }
+    } 
     public void FadeMusic(Music music, float duration)
     {
-        if (musicIsFading) return;
+        StopAllCoroutines();
+        CHangeMusicVolume(GameManager.instance.musicVolume);
+        //if (musicIsFading) return;
         StartCoroutine(FadingMusic(music, duration));
     }
     private IEnumerator FadingMusic(Music music, float duration)

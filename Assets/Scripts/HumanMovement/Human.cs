@@ -59,9 +59,11 @@ public class Human : MonoBehaviour
         Vector3 rightLine = Vector3.Lerp(transform.forward, -transform.right, detectionAngle / 180).normalized * detectionRange;
         Vector3 leftLine = Vector3.Lerp(transform.forward, transform.right, detectionAngle / 180).normalized * detectionRange;
 
+        #if (UNITY_EDITOR)
         UnityEditor.Handles.DrawWireArc(transform.position, transform.up, rightLine, detectionAngle, detectionRange);
         UnityEditor.Handles.DrawLine(transform.position, transform.position + rightLine);
         UnityEditor.Handles.DrawLine(transform.position, transform.position + leftLine);
+        #endif  
     }
 
     public GnomeMovement detectedGnome()

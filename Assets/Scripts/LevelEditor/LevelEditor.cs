@@ -250,6 +250,7 @@ public class LevelEditor : MonoBehaviour
         if (DetectedObject(obj, position) != null) { return; } //check if object is already placed there somehow.
 
         //instantiatePrefab
+        #if (UNITY_EDITOR)
         GameObject prefab_instance = PrefabUtility.InstantiatePrefab(obj.prefab as GameObject) as GameObject;
         prefab_instance.transform.parent = obj.parent;
         prefab_instance.transform.position = position;
@@ -257,6 +258,7 @@ public class LevelEditor : MonoBehaviour
         prefab_instance.transform.Rotate(new Vector3(0, rotation, 0));
         //add to list
         obj.list.Add(prefab_instance);
+        #endif
     }
 
     public void RemoveObject(EditorObject obj, Vector3 position)

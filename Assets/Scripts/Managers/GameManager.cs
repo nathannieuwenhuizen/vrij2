@@ -11,16 +11,24 @@ public class GameManager : MonoBehaviour
     private GameObject pauseButton;
     [SerializeField]
     private FadeImage fadeImage;
+
+    public float musicVolume = .3f;
+    public float musicPauseVolume = .1f;
+
+
+    public static GameManager instance;
     void Start()
     {
-        AudioManager.instance?.Playmusic(Music.museum, .3f * Settings.Music);
+        instance = this;
+
+        AudioManager.instance?.Playmusic(Music.museum, musicVolume);
     }
 
 
     public void Pause(bool val)
     {
         AudioManager.instance?.PlaySound(AudioEffect.button_click, .4f); //TODO: button click
-        AudioManager.instance?.CHangeMusicVolume(val ? .1f : .3f); // change music volume
+        AudioManager.instance?.CHangeMusicVolume(val ? musicPauseVolume : musicVolume); // change music volume
 
         fadeImage.alpha = val ? .5f : 0f;
         Time.timeScale = val ? 0 : 1f;
