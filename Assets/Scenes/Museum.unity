@@ -14449,6 +14449,16 @@ PrefabInstance:
       propertyPath: soundEffectInstances.Array.data[10].clip.Array.data[0]
       value: 
       objectReference: {fileID: 8300000, guid: 4f258cbddfcc654458f757eaa955c932, type: 3}
+    - target: {fileID: 698393693978890757, guid: ba9260d5470d9ab4aaa78a88c9da0991,
+        type: 3}
+      propertyPath: musicClips.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: a21f4b1d543a5cd47acea939a66f1145, type: 3}
+    - target: {fileID: 698393693978890757, guid: ba9260d5470d9ab4aaa78a88c9da0991,
+        type: 3}
+      propertyPath: soundEffectInstances.Array.data[3].clip.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 3a6712c1301556249bbf9fe12ad6c35b, type: 3}
     - target: {fileID: 698393693978890758, guid: ba9260d5470d9ab4aaa78a88c9da0991,
         type: 3}
       propertyPath: m_LocalPosition.x
