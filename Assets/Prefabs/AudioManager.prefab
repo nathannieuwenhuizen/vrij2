@@ -140,9 +140,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdbcccc70de1007458c10c1331e7d4cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundEffectInstances: []
+  soundEffectInstances:
+  - audioEffect: 0
+    audioS: {fileID: 0}
+    clip:
+    - {fileID: 8300000, guid: 1854be1a7b94dfe45b839f58148f1bed, type: 3}
+  - audioEffect: 0
+    audioS: {fileID: 0}
+    clip:
+    - {fileID: 8300000, guid: 1854be1a7b94dfe45b839f58148f1bed, type: 3}
+  - audioEffect: 1
+    audioS: {fileID: 0}
+    clip:
+    - {fileID: 8300000, guid: aed5a23faa0fb1d4cb1c9a50d4494f8f, type: 3}
+  - audioEffect: 2
+    audioS: {fileID: 0}
+    clip:
+    - {fileID: 8300000, guid: 391a3f3bc7eb0f34bb3b17ad100b2903, type: 3}
+  - audioEffect: 3
+    audioS: {fileID: 0}
+    clip:
+    - {fileID: 8300000, guid: 4ec010e76cc8153479a87a9da281576a, type: 3}
+    - {fileID: 8300000, guid: 48d7df98f37e3c2489ec316961cda399, type: 3}
+    - {fileID: 8300000, guid: 189117899594b034fa9db23b4ff04c63, type: 3}
+    - {fileID: 8300000, guid: f5ab7a886d7d13f488172963c0545e57, type: 3}
+  - audioEffect: 4
+    audioS: {fileID: 0}
+    clip:
+    - {fileID: 8300000, guid: 8cc7d8bb22e8cab45b17ba511c53bb91, type: 3}
+  - audioEffect: 5
+    audioS: {fileID: 0}
+    clip:
+    - {fileID: 8300000, guid: 71b2169071c2cd448ac8733544bbee9b, type: 3}
   musicClips:
   - music: 1
-    clip: {fileID: 8300000, guid: e7d241f802bf50c4aa5cecb6424e5d60, type: 3}
+    clip: {fileID: 8300000, guid: d3447f79bd3d8cf4cb9a9ffd1ebc27c3, type: 3}
   - music: 0
-    clip: {fileID: 8300000, guid: e7d241f802bf50c4aa5cecb6424e5d60, type: 3}
+    clip: {fileID: 8300000, guid: 9d6e9bebe716a754eb364243e3173d19, type: 3}

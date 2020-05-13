@@ -113,7 +113,9 @@ MonoBehaviour:
   wayPoints:
   - {fileID: 0}
   - {fileID: 0}
-  walkSpeed: 0.1
+  - {fileID: 0}
+  - {fileID: 0}
+  walkSpeed: 0.05
   rotateSpeed: 2
   IsMoving: 0
   randomOffset: 0
@@ -129,11 +131,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d9a232a7cc7ffb48995503f1a1fc5bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionAngle: 90
-  detectionRange: 6
+  detectionAngle: 79
+  detectionRange: 5
   spotLight: {fileID: 4846502790335119303}
   movement: {fileID: 0}
   stateMachine: {fileID: 0}
+  gnomeAttackDistance: 1.5
   foundGnome: {fileID: 0}
 --- !u!1 &6753237585458508421
 GameObject:
@@ -272,8 +275,8 @@ Light:
   m_Shape: 0
   m_Color: {r: 0.9901843, g: 1, b: 0, a: 1}
   m_Intensity: 2
-  m_Range: 6
-  m_SpotAngle: 90
+  m_Range: 5
+  m_SpotAngle: 79
   m_InnerSpotAngle: 1
   m_CookieSize: 10
   m_Shadows:

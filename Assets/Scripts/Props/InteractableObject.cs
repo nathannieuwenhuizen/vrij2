@@ -61,6 +61,7 @@ public class InteractableObject : MonoBehaviour
         if (isVisible) return;
         isVisible = true;
 
+        AudioManager.instance?.PlaySound(AudioEffect.popup_show, 1f);
         popup.transform.Find("button").GetComponent<SpriteRenderer>().sprite = controllerIndex == 2 ? rightButton : leftButton;
         popup.GetComponentInChildren<TextMesh>().text = popUpText;
         StartCoroutine(Animate(showCurve, 0, endScale));

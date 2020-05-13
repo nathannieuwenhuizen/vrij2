@@ -160,6 +160,7 @@ public class ChaseState : IState
         if (Vector3.Distance(human.transform.position, human.foundGnome.transform.position) < human.gnomeAttackDistance)
         {
             Debug.Log("I'm taking yourt stuff away!");
+            AudioManager.instance?.PlaySound(AudioEffect.guard_catches_you, .3f);
             OnStateSwitch(human.patrolState);
         }
     }

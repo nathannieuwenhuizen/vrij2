@@ -13,14 +13,14 @@ public class GameManager : MonoBehaviour
     private FadeImage fadeImage;
     void Start()
     {
-        AudioManager.instance?.Playmusic(Music.museum, .5f * Settings.Music);
+        AudioManager.instance?.Playmusic(Music.museum, .3f * Settings.Music);
     }
 
 
     public void Pause(bool val)
     {
-        //AudioManager.instance?.PlaySound(AudioEffect) //TODO: button click
-        AudioManager.instance?.CHangeMusicVolume(val ? .2f : 1f); // change music volume
+        AudioManager.instance?.PlaySound(AudioEffect.button_click, .4f); //TODO: button click
+        AudioManager.instance?.CHangeMusicVolume(val ? .1f : .3f); // change music volume
 
         fadeImage.alpha = val ? .5f : 0f;
         Time.timeScale = val ? 0 : 1f;
