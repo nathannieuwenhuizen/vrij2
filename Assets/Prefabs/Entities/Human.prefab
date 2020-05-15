@@ -110,6 +110,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dce3069436e43174caccb4de40c95c55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lookCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: -0.008880615
+      inSlope: 0.035152137
+      outSlope: 0.035152137
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.48926377
+      value: 0.008318053
+      inSlope: 12.806449
+      outSlope: 12.806449
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.16654365
+    - serializedVersion: 3
+      time: 0.9918823
+      value: -0.007522583
+      inSlope: 0.06586163
+      outSlope: 0.06586163
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.12850724
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   wayPoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -132,7 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionAngle: 79
-  detectionRange: 5
+  detectionRange: 8.51
   spotLight: {fileID: 4846502790335119303}
   movement: {fileID: 0}
   stateMachine: {fileID: 0}
@@ -275,7 +308,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 0.9901843, g: 1, b: 0, a: 1}
   m_Intensity: 2
-  m_Range: 5
+  m_Range: 8.51
   m_SpotAngle: 79
   m_InnerSpotAngle: 1
   m_CookieSize: 10

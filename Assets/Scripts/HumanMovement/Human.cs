@@ -24,6 +24,7 @@ public class Human : MonoBehaviour
     private FSM stateMachine;
 
     public ChaseState chaseState;
+    public SearchState searchState;
     public PatrolState patrolState;
 
     public float gnomeAttackDistance = 2f;
@@ -41,6 +42,8 @@ public class Human : MonoBehaviour
         patrolState.human = this;
         chaseState = new ChaseState();
         chaseState.human = this;
+        searchState = new SearchState();
+        searchState.human = this;
 
         stateMachine = new FSM(patrolState);
 
@@ -64,6 +67,7 @@ public class Human : MonoBehaviour
             yield return new WaitForSeconds(.3f);
         }
     }
+
 
     private void Update()
     {
@@ -134,8 +138,8 @@ public class PatrolState : IState
     public Gnome lastDetectedGnome;
     public void Start()
     {
-        human.spotLight.color = Color.yellow;
 
+        human.spotLight.color = Color.green;
         human.movement.StartPatrolling();
     }
 
@@ -160,7 +164,7 @@ public class ChaseState : IState
 {
     public ILiveStateDelegate OnStateSwitch { get; set; }
     public Human human;
-
+    public Vector3 lastSeenPos;
     public void Start()
     {
         human.spotLight.color = Color.red;
@@ -174,24 +178,60 @@ public class ChaseState : IState
         human.foundGnome = human.detectedGnome();
         if (human.foundGnome == null)
         {
-            OnStateSwitch(human.patrolState);
+            human.searchState.searchPos = lastSeenPos;
+            OnStateSwitch(human.searchState);
             return;
+        } else
+        {
+            lastSeenPos = human.foundGnome.transform.position;
         }
 
         if (Vector3.Distance(human.transform.position, human.foundGnome.transform.position) < human.gnomeAttackDistance)
         {
-            Debug.Log("I'm taking yourt stuff away!");
             human.RetrieveArtWorkFrom(human.foundGnome);
             AudioManager.instance?.PlaySound(AudioEffect.guard_catches_you, .3f);
+            AudioManager.instance?.FadeMusic(Music.museum, 1f);
             OnStateSwitch(human.patrolState);
         }
     }
 
     public void Exit()
     {
-        AudioManager.instance?.FadeMusic(Music.museum, 1f);
         human.movement.StopMovement();
     }
+}
+public class SearchState : IState
+{
+    public ILiveStateDelegate OnStateSwitch { get; set; }
+    public Human human;
+    public Vector3 searchPos;
+    public void Start()
+    {
+        human.spotLight.color = Color.yellow;
+        Debug.Log("search pos: " + searchPos);
+        Debug.Log("my pos: " + human.transform.position);
+        human.movement.Search(searchPos, 90, 5f);//starts searching
+    }
 
+    public void Run()
+    {
+        if (!human.movement.IsMoving)
+        {
+            AudioManager.instance?.FadeMusic(Music.museum, 1f);
+            OnStateSwitch(human.patrolState);
+        }
 
+        human.foundGnome = human.detectedGnome();
+        if (human.foundGnome != null)
+        {
+            OnStateSwitch(human.chaseState);
+        }
+    }
+
+    public void Exit()
+    {
+        human.movement.StopMovement();
+        AudioManager.instance?.FadeMusic(Music.museum, 1f);
+
+    }
 }

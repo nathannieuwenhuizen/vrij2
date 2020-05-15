@@ -19,11 +19,6 @@ public class HumanMovement : MonoBehaviour
 
     private int cIndex = 0;
 
-    private void Start()
-    {
-        //StartPatrolling();
-    }
-
     public void StartPatrolling()
     {
         if (wayPoints.Length > 0)
@@ -42,6 +37,7 @@ public class HumanMovement : MonoBehaviour
         StopAllCoroutines();
     }
 
+
     Vector3[] transformToPositions(Transform[] transforms)
     {
         Vector3[] list = new Vector3[transforms.Length];
@@ -56,24 +52,31 @@ public class HumanMovement : MonoBehaviour
     {
         Vector3 newDirection;
 
-        while (Mathf.Abs(Vector3.Angle(transform.forward, destination - transform.position)) > 1f)
+        while (Mathf.Abs(Vector2.Angle(ToXZVector(transform.forward), ToXZVector(destination - transform.position) )) > 1f)
         {
             newDirection = Vector3.RotateTowards(transform.forward, destination - transform.position, Time.deltaTime * rotateSpeed, 0.0f);
+            newDirection.y = 0;
+
             transform.rotation = Quaternion.LookRotation(newDirection);
             yield return new WaitForFixedUpdate();
         }
         newDirection = Vector3.RotateTowards(transform.forward, destination - transform.position, 1f, 0.0f);
+        newDirection.y = 0;
         transform.rotation = Quaternion.LookRotation(newDirection);
 
     }
+    public Vector2 ToXZVector( Vector3 input)
+    {
+        return new Vector2(input.x, input.z);
+    }
     public IEnumerator Walking(Vector3 destination)
     {
-        while (Vector3.Distance(transform.position, destination) > 0.3f)
+        while (Vector2.Distance(ToXZVector(transform.position), ToXZVector(destination)) > 0.3f)
         {
             transform.Translate(transform.InverseTransformDirection(transform.forward) * walkSpeed);
             yield return new WaitForFixedUpdate();
         }
-        transform.position = destination;
+        transform.position = new Vector3(destination.x, transform.position.y, destination.z); 
     }
 
     public IEnumerator WalkLoop(Vector3[] positions, bool invert, int startIndex)
@@ -102,28 +105,47 @@ public class HumanMovement : MonoBehaviour
 
         while (true)
         {
-            newDirection = Vector3.RotateTowards(transform.forward, target.position - transform.position, Time.deltaTime * rotateSpeed, 0.0f);
+            Vector3 delta = target.position - transform.position;
+            delta.y = 0;
+            newDirection = Vector3.RotateTowards(transform.forward,  delta, Time.deltaTime * rotateSpeed, 0.0f);
             transform.rotation = Quaternion.LookRotation(newDirection);
             transform.Translate(transform.InverseTransformDirection(transform.forward) * walkSpeed);
             yield return new WaitForFixedUpdate();
         }
     }
 
-    public IEnumerator GoTo(Vector3 pos, bool destoryWhenFinish = false)
+    public IEnumerator GoTo(Vector3 pos)
     {
-        if (!IsMoving)
-        {
-            IsMoving = true;
-            yield return StartCoroutine(Orienting(pos));
-            yield return StartCoroutine(Walking(pos));
-            IsMoving = false;
-        }
-        if (destoryWhenFinish)
-        {
-            Destroy(this.gameObject);
-        }
-
+        yield return StartCoroutine(Orienting(pos));
+        yield return StartCoroutine(Walking(pos));
     }
+
+    public void Search(Vector3 pos, float angle, float searchDuration)
+    {
+        StartCoroutine(Searching(pos, angle, searchDuration));
+    }
+    public IEnumerator Searching(Vector3 pos, float angle, float searchDuration)
+    {
+        IsMoving = true;
+        yield return StartCoroutine(GoTo(pos));
+        yield return StartCoroutine(LookingAround(angle, searchDuration));
+        IsMoving = false;
+        Debug.Log("is moving is false");
+    }
+    public IEnumerator LookingAround(float angle, float searchDuration)
+    {
+        float startRotation = transform.rotation.y;
+        float index = 0;
+        while (index < searchDuration)
+        {
+            index += Time.deltaTime;
+            transform.rotation = Quaternion.Euler( new Vector3(0, startRotation + (angle / 2f + Mathf.Sin(index /searchDuration *Mathf.PI * 2) * angle), 0));
+            yield return new WaitForFixedUpdate();
+            Debug.Log("index: " + index); 
+
+        }
+    }
+
     void OnDrawGizmosSelected()
     {
 
