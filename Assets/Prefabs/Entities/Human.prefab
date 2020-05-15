@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6276548430814524355}
   - component: {fileID: 7968456993783906281}
   - component: {fileID: 3033577842028841842}
+  - component: {fileID: 8050620471804136035}
   m_Layer: 0
   m_Name: Human
   m_TagString: Untagged
@@ -110,39 +111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dce3069436e43174caccb4de40c95c55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lookCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: -0.008880615
-      inSlope: 0.035152137
-      outSlope: 0.035152137
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.48926377
-      value: 0.008318053
-      inSlope: 12.806449
-      outSlope: 12.806449
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.16654365
-    - serializedVersion: 3
-      time: 0.9918823
-      value: -0.007522583
-      inSlope: 0.06586163
-      outSlope: 0.06586163
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.12850724
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   wayPoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -171,6 +139,28 @@ MonoBehaviour:
   stateMachine: {fileID: 0}
   gnomeAttackDistance: 1.5
   foundGnome: {fileID: 0}
+--- !u!195 &8050620471804136035
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5442579054880683038}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &6753237585458508421
 GameObject:
   m_ObjectHideFlags: 0
