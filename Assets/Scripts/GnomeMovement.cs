@@ -49,6 +49,8 @@ public class GnomeMovement : MonoBehaviour
     [SerializeField]
     private TrenchCoat trenchCoat;
 
+    private bool isMoving = false;
+
     public TrenchCoat TrenchCoat
     {
         get { return trenchCoat; }
@@ -221,6 +223,17 @@ public class GnomeMovement : MonoBehaviour
         //getting input to aim
         lookRotation = new Vector3(Input.GetAxis("Horizontal_P" + controllerIndex), 0, -Input.GetAxis("Vertical_P" + controllerIndex));
 
+        //play sound when gnome starts moving
+        if (lookRotation.x != 0 || lookRotation.z != 0)
+        {
+            if (!isMoving)
+            {
+                AudioManager.instance?.PlaySound(AudioEffect.gnome_general_interact, .1f);
+            }
+        }
+        isMoving = lookRotation.x != 0 || lookRotation.z != 0;
+
+        //rotates the gnome relative to camera rotation
         if (relativeToCamera)
         {
             Vector3 forward = Camera.main.transform.forward;
@@ -267,10 +280,13 @@ public class GnomeMovement : MonoBehaviour
             if (isOnTop)
             {
                 GoAwayFromStack();
+                AudioManager.instance?.PlaySound(AudioEffect.gnome_yell, .4f);
+
             }
             else
             {
                 GoToTopOfStack();
+                AudioManager.instance?.PlaySound(AudioEffect.gnome_jump, .4f);
             }
         }
 
@@ -296,6 +312,7 @@ public class GnomeMovement : MonoBehaviour
             Debug.Log("interact" + controllerIndex);
             if (hoverObject != null)
             {
+                AudioManager.instance?.PlaySound(AudioEffect.gnome_general_interact, .4f);
                 hoverObject.Interact(this);
             }
         }

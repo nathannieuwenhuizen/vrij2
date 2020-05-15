@@ -5,6 +5,16 @@ using System.IO;
 
 public enum AudioEffect
 {
+    button_click,
+    congrats,
+    fountain,
+    guard_catches_you,
+    normal_gibberish,
+    tension_gibberish,
+    gnome_general_interact,
+    gnome_jump,
+    gnome_yell,
+    popup_show
 }
 public enum Music
 {
@@ -31,13 +41,34 @@ public class AudioManager : MonoBehaviour
         instance = this;
         musicSource = GetComponent<AudioSource>();
         musicSource.loop = true;
+
+        InitialiseAudioSources();
+    }
+
+    public void InitialiseAudioSources()
+    {
+        foreach(SFXInstance sfx in soundEffectInstances)
+        {
+            if (sfx.clip.Length > 0)
+            {
+                GameObject temp = new GameObject(sfx.clip[0].name);
+                temp.transform.parent = transform;
+                sfx.audioS = temp.AddComponent<AudioSource>();
+                sfx.audioS.playOnAwake = false;
+                sfx.audioS.loop = false;
+            }
+        }
     }
 
     public void PlaySound(AudioEffect audioEffect, float volume)
     {
+        Debug.Log("Audio should be playing");
         SFXInstance selectedAudio = soundEffectInstances.Find(x => x.audioEffect == audioEffect);
         if (selectedAudio == null) return;
+        Debug.Log("Audio should be playing still");
+
         selectedAudio.audioS.spatialBlend = 0;
+        selectedAudio.audioS.clip = selectedAudio.getClip;
         selectedAudio.audioS.volume = volume * Settings.SFX;
         selectedAudio.audioS.Play();
     }
@@ -79,10 +110,12 @@ public class AudioManager : MonoBehaviour
     public void CHangeMusicVolume(float volume)
     {
         musicSource.volume = volume * Settings.Music;
-    }
+    } 
     public void FadeMusic(Music music, float duration)
     {
-        if (musicIsFading) return;
+        StopAllCoroutines();
+        CHangeMusicVolume(GameManager.instance.musicVolume);
+        //if (musicIsFading) return;
         StartCoroutine(FadingMusic(music, duration));
     }
     private IEnumerator FadingMusic(Music music, float duration)
@@ -120,7 +153,25 @@ public class AudioManager : MonoBehaviour
 public class SFXInstance
 {
     public AudioEffect audioEffect;
+    [HideInInspector]
     public AudioSource audioS;
+    public AudioClip[] clip;
+
+    public AudioClip getClip
+    {
+        get
+        {
+            if (clip.Length <= 1)
+            {
+                return clip[0];
+            }
+            else
+            {
+                return clip[Random.Range(0, clip.Length)]; //return random sound
+            }
+        }
+    }
+
 }
 [System.Serializable]
 public class MusicInstance
