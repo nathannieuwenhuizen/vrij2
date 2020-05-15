@@ -65,6 +65,7 @@ public class Gnome : MonoBehaviour
         stolenArtWork = new List<ArtWork>();
         artWorkParent = new GameObject("Artworks");
         artWorkParent.transform.parent = transform;
+        artWorkParent.transform.localPosition = new Vector2(0, 0);
 
         myColl = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();

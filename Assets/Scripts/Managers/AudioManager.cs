@@ -62,10 +62,8 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySound(AudioEffect audioEffect, float volume)
     {
-        Debug.Log("Audio should be playing");
         SFXInstance selectedAudio = soundEffectInstances.Find(x => x.audioEffect == audioEffect);
         if (selectedAudio == null) return;
-        Debug.Log("Audio should be playing still");
 
         selectedAudio.audioS.spatialBlend = 0;
         selectedAudio.audioS.clip = selectedAudio.getClip;

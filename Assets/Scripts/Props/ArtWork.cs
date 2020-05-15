@@ -9,35 +9,38 @@ public class ArtWork : InteractableObject
 
     private Vector3 rotateSpeed = new Vector3(5f, 5f, 5f);
 
-    [HideInInspector]
-    public bool collected = false;
-
 
     public override void Interact(Gnome gnome = null)
     {
         base.Interact(gnome);
-        Collect(gnome);
+        StartCoroutine(Stealing(gnome));
     }
 
-    public void Collect(Gnome gnome)
+    public IEnumerator Stealing(Gnome gnome)
     {
-        if (gnome.stolenArtWork.Contains(this)) return;
-
-        gnome.stolenArtWork.Add(this);
-        StartCoroutine(AnimateToGnome(gnome));
+        if (!gnome.stolenArtWork.Contains(this))
+        {
+            gnome.stolenArtWork.Add(this);
+            yield return StartCoroutine(AnimateTo(gnome.artWorkParent.transform));
+        }
     }
 
-
-    IEnumerator AnimateToGnome(Gnome gnome)
+    public void CollectByHuman(Human human)
     {
-        Transform dest = gnome.transform;
+        StartCoroutine(AnimateTo(human.transform));
+    }
+
+    IEnumerator AnimateTo(Transform dest)
+    {
+
+        transform.parent = null;
 
         float index = 0;
         float startPos = transform.position.y;
 
         Vector2 currentPos = new Vector2();
         Vector2 desiredPos = new Vector2();
-        Vector3 startScale = transform.localScale;
+        Vector3 startScale = new Vector3(1, 1, 1);
         Vector3 endScale = Vector3.zero;
 
         while (index < 1)
@@ -58,7 +61,7 @@ public class ArtWork : InteractableObject
         }
 
         transform.rotation = Quaternion.Euler(Vector3.zero); //set roation back
-        transform.parent = gnome.artWorkParent.transform;
+        transform.parent = dest;
         gameObject.SetActive(false);
     }
 }
