@@ -16,7 +16,7 @@ public interface IState
 public class FSM : MonoBehaviour
 {
     [SerializeField]
-    private IState cState;
+    public IState cState;
     public FSM (IState _startState)
     {
         SwitchState(_startState);

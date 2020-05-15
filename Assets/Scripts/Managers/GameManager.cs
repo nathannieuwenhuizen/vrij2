@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private FadeImage fadeImage;
 
+    [HideInInspector]
+    public Human[] humans;
+
     public float musicVolume = .3f;
     public float musicPauseVolume = .1f;
 
@@ -21,6 +24,7 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
 
+        humans = FindObjectsOfType<Human>(); // one time search
         AudioManager.instance?.Playmusic(Music.museum, musicVolume);
     }
 

@@ -20,8 +20,8 @@ public class Human : MonoBehaviour
 
     private Gnome[] gnomes;
 
-    [SerializeField]
-    private FSM stateMachine;
+    [HideInInspector]
+    public FSM stateMachine;
 
     public ChaseState chaseState;
     public SearchState searchState;
@@ -159,7 +159,6 @@ public class PatrolState : IState
     }
 
 }
-
 public class ChaseState : IState
 {
     public ILiveStateDelegate OnStateSwitch { get; set; }
@@ -232,6 +231,5 @@ public class SearchState : IState
     {
         human.movement.StopMovement();
         AudioManager.instance?.FadeMusic(Music.museum, 1f);
-
     }
 }
