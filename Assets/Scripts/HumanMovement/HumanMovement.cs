@@ -10,9 +10,15 @@ public class HumanMovement : MonoBehaviour
     [SerializeField]
     private Transform[] wayPoints;
 
+    private Vector3 startOrientation;
+    private Vector3 startPosition;
 
+
+    [HideInInspector]
     public bool IsMoving = false;
 
+    [SerializeField]
+    private bool invert = false;
 
     [SerializeField]
     private float randomOffset = 0.1f;
@@ -21,15 +27,35 @@ public class HumanMovement : MonoBehaviour
     public void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+
+        startOrientation = transform.forward;
+        startPosition = transform.position;
     }
 
 
     public void StartPatrolling()
     {
-        if (wayPoints.Length > 0)
+        if (wayPoints.Length > 1)
         {
-            StartCoroutine(WalkLoop(transformToPositions(wayPoints), false, ClosestWayPointIndex()));
+            StartCoroutine(WalkLoop(transformToPositions(wayPoints), invert, ClosestWayPointIndex()));
+        } else
+        {
+            StartCoroutine(BackToOriginalPosition());
         }
+    }
+
+    public IEnumerator BackToOriginalPosition()
+    {
+        if (wayPoints.Length == 0)
+        {
+            agent.SetDestination(startPosition);
+            yield return StartCoroutine(GoTo(startPosition));
+        }else
+        {
+            yield return StartCoroutine(GoTo(wayPoints[0].position));
+        }
+        yield return StartCoroutine(Orienting(transform.position + startOrientation));
+
     }
 
     public int ClosestWayPointIndex()
@@ -58,6 +84,24 @@ public class HumanMovement : MonoBehaviour
         StopAllCoroutines();
     }
 
+    public IEnumerator Orienting(Vector3 destination)
+    {
+        Vector3 newDirection;
+        agent.enabled = false;
+        while (Mathf.Abs(Vector2.Angle(ToXZVector(transform.forward), ToXZVector(destination - transform.position))) > 1f)
+        {
+            newDirection = Vector3.RotateTowards(transform.forward, destination - transform.position, Time.deltaTime * 2f, 0.0f);
+            newDirection.y = 0;
+
+            transform.rotation = Quaternion.LookRotation(newDirection);
+            yield return new WaitForFixedUpdate();
+        }
+        newDirection = Vector3.RotateTowards(transform.forward, destination - transform.position, 1f, 0.0f);
+        newDirection.y = 0;
+        transform.rotation = Quaternion.LookRotation(newDirection);
+        agent.enabled = true;
+
+    }
 
     Vector3[] transformToPositions(Transform[] transforms)
     {
