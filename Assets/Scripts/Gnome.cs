@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GnomeMovement : MonoBehaviour
+public class Gnome : MonoBehaviour
 {
 
     private Rigidbody rb;
@@ -16,8 +16,8 @@ public class GnomeMovement : MonoBehaviour
     public bool canMove = false;
     public bool isOnTop = false;
 
-    public GnomeMovement playerAboveMe;
-    public GnomeMovement playerBelowMe;
+    public Gnome playerAboveMe;
+    public Gnome playerBelowMe;
 
     [SerializeField]
     private float turnSpeed = 10f;
@@ -51,6 +51,9 @@ public class GnomeMovement : MonoBehaviour
 
     private bool isMoving = false;
 
+    public GameObject artWorkParent;
+    public List<ArtWork> stolenArtWork;
+
     public TrenchCoat TrenchCoat
     {
         get { return trenchCoat; }
@@ -59,28 +62,32 @@ public class GnomeMovement : MonoBehaviour
 
     void Start()
     {
+        stolenArtWork = new List<ArtWork>();
+        artWorkParent = new GameObject("Artworks");
+        artWorkParent.transform.parent = transform;
+
         myColl = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
     }
 
 
-    public GnomeMovement GetClosestPlayer()
+    public Gnome GetClosestPlayer()
     {
-        GnomeMovement closest = null;
+        Gnome closest = null;
         float closestDistance = interactDistanceWithPlayer * 2;
 
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactDistanceWithPlayer);
         int i = 0;
         while (i < hitColliders.Length)
         {
-            if (hitColliders[i].GetComponent<GnomeMovement>() != null)
+            if (hitColliders[i].GetComponent<Gnome>() != null)
             {
-                GnomeMovement otherPlayer = hitColliders[i].GetComponent<GnomeMovement>();
+                Gnome otherPlayer = hitColliders[i].GetComponent<Gnome>();
                 float distance = Vector3.Distance(transform.position, hitColliders[i].transform.position);
                 if (distance < closestDistance && !otherPlayer.isOnTop && otherPlayer != this)
                 {
                     closestDistance = distance;
-                    closest = hitColliders[i].GetComponent<GnomeMovement>();
+                    closest = hitColliders[i].GetComponent<Gnome>();
                 }
             }
             i++;
@@ -92,7 +99,7 @@ public class GnomeMovement : MonoBehaviour
     public InteractableObject GetClosestInteractable()
     {
         InteractableObject closest = null;
-        float closestDistance = interactDistanceWithPlayer * 2;
+        float closestDistance = Mathf.Infinity;
 
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, interactDistanceWithPlayer);
         int i = 0;
@@ -102,8 +109,9 @@ public class GnomeMovement : MonoBehaviour
                 if (hitColliders[i].transform.parent.GetComponent<InteractableObject>() != null)
                 {
                     InteractableObject otherObject = hitColliders[i].transform.parent.GetComponent<InteractableObject>();
+
                     float distance = Vector3.Distance(transform.position, hitColliders[i].transform.position);
-                    if (distance < closestDistance && otherObject.PopupIsActive)
+                    if (distance < closestDistance && otherObject.CanBeInteracted(this))
                     {
                         closestDistance = distance;
                         closest = otherObject;
@@ -125,10 +133,10 @@ public class GnomeMovement : MonoBehaviour
 
     public void GoToTopOfStack()
     {
-        GnomeMovement closestPlayer = GetClosestPlayer();
+        Gnome closestPlayer = GetClosestPlayer();
         if (closestPlayer != null)
         {
-            GnomeMovement playerToAttachTo = closestPlayer;
+            Gnome playerToAttachTo = closestPlayer;
             if (closestPlayer.playerAboveMe != null)
             {
                 playerToAttachTo = closestPlayer.playerAboveMe;

@@ -18,7 +18,7 @@ public class Human : MonoBehaviour
     [HideInInspector]
     public HumanMovement movement;
 
-    private GnomeMovement[] gnomes;
+    private Gnome[] gnomes;
 
     [SerializeField]
     private FSM stateMachine;
@@ -29,12 +29,12 @@ public class Human : MonoBehaviour
     public float gnomeAttackDistance = 2f;
 
     [HideInInspector]
-    public GnomeMovement foundGnome;
+    public Gnome foundGnome;
 
     private void Start()
     {
         movement = GetComponent<HumanMovement>();
-        gnomes = FindObjectsOfType<GnomeMovement>();
+        gnomes = FindObjectsOfType<Gnome>();
 
 
         patrolState = new PatrolState();
@@ -66,18 +66,18 @@ public class Human : MonoBehaviour
         #endif  
     }
 
-    public GnomeMovement detectedGnome()
+    public Gnome detectedGnome()
     {
-        GnomeMovement result = null;
+        Gnome result = null;
 
-        foreach(GnomeMovement gnome in gnomes)
+        foreach(Gnome gnome in gnomes)
         {
             RaycastHit hit;
             if (Physics.Raycast(transform.position, gnome.transform.position - transform.position, out hit, detectionRange))
             {
                 if (Vector3.Angle(transform.forward, hit.transform.position - transform.position) < detectionAngle / 2)
                 {
-                    if (hit.transform.GetComponent<GnomeMovement>() != null)
+                    if (hit.transform.GetComponent<Gnome>() != null)
                     {
                         if (gnome.TrenchCoat != null && gnome.playerBelowMe != null)
                         {
@@ -112,7 +112,7 @@ public class PatrolState : IState
 {
     public ILiveStateDelegate OnStateSwitch { get; set; }
     public Human human;
-    public GnomeMovement lastDetectedGnome;
+    public Gnome lastDetectedGnome;
     public void Start()
     {
         human.spotLight.color = Color.yellow;

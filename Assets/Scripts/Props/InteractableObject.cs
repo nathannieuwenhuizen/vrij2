@@ -21,6 +21,9 @@ public class InteractableObject : MonoBehaviour
     [SerializeField]
     private string popUpText = "Wear";
 
+    [SerializeField]
+    private bool isHigherUp = false;
+
     private Sprite leftButton;
     private Sprite rightButton;
 
@@ -49,6 +52,16 @@ public class InteractableObject : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up);
             popup.transform.rotation = rotation;
             //popup.transform.LookAt(Camera.main.transform);
+        }
+    }
+    public bool CanBeInteracted(Gnome other)
+    {
+        if (isHigherUp)
+        {
+            return popupIsActive && other.playerBelowMe != null;
+        } else
+        {
+            return popupIsActive;
         }
     }
 
@@ -97,7 +110,7 @@ public class InteractableObject : MonoBehaviour
 
     }
 
-    public virtual void Interact(GnomeMovement gnome = null)
+    public virtual void Interact(Gnome gnome = null)
     {
         HideUI();
         popupIsActive = false;

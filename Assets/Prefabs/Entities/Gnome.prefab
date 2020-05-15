@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536b0df3054ddde4a8f4fc6da22c5760, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerIndex: 1
+  controllerIndex: 2
   canMove: 1
   isOnTop: 0
   playerAboveMe: {fileID: 0}
