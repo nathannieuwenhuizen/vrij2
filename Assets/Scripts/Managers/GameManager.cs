@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
     }
     public IEnumerator Ending()
     {
-        yield return StartCoroutine(fadeImage.FadeTo(0, 1, 4f));
+        yield return StartCoroutine(fadeImage.FadeTo(0, 1, 1f));
         sceneLoader.LoadNewScene("MainMenu");
     }
 }
