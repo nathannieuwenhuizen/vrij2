@@ -90,7 +90,7 @@ public class InteractableObject : MonoBehaviour
         }
         scale = endScale;
     }
-    private float scale
+    protected float scale
     {
         get {
             return popup.transform.localScale.x;

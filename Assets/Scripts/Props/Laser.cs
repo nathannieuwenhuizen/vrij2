@@ -39,9 +39,11 @@ public class Laser : MonoBehaviour
 
     void Update()
     {
+
         if (RaycastGnome() != null && hitEvent != null)
         {
             hitEvent.Invoke();
         }
     }
+
 }
