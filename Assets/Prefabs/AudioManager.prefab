@@ -167,11 +167,11 @@ MonoBehaviour:
   - audioEffect: 4
     audioS: {fileID: 0}
     clip:
-    - {fileID: 8300000, guid: 8cc7d8bb22e8cab45b17ba511c53bb91, type: 3}
+    - {fileID: 8300000, guid: 1153f5cd5114cb94ca8db75320dc585c, type: 3}
   - audioEffect: 5
     audioS: {fileID: 0}
     clip:
-    - {fileID: 8300000, guid: 71b2169071c2cd448ac8733544bbee9b, type: 3}
+    - {fileID: 8300000, guid: a21f4b1d543a5cd47acea939a66f1145, type: 3}
   - audioEffect: 6
     audioS: {fileID: 0}
     clip:
@@ -192,6 +192,6 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 4f258cbddfcc654458f757eaa955c932, type: 3}
   musicClips:
   - music: 1
-    clip: {fileID: 8300000, guid: d3447f79bd3d8cf4cb9a9ffd1ebc27c3, type: 3}
+    clip: {fileID: 8300000, guid: e7d241f802bf50c4aa5cecb6424e5d60, type: 3}
   - music: 0
     clip: {fileID: 8300000, guid: a21f4b1d543a5cd47acea939a66f1145, type: 3}
