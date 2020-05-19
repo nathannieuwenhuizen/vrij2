@@ -18,9 +18,10 @@ public class ArtWork : InteractableObject
 
     public IEnumerator Stealing(Gnome gnome)
     {
-        if (!gnome.stolenArtWork.Contains(this))
+        if (!gnome.StolenArtWork.Contains(this))
         {
-            gnome.stolenArtWork.Add(this);
+            gnome.StolenArtWork.Add(this);
+            GameManager.instance.UpdateScoreUI();
             yield return StartCoroutine(AnimateTo(gnome.artWorkParent.transform));
         }
     }

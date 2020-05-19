@@ -8,7 +8,7 @@ public class Gnome : MonoBehaviour
     private Rigidbody rb;
     private CapsuleCollider myColl;
     private Vector3 lookRotation;
-
+    private ParticleSystem walkParticleSystem;
 
     [SerializeField]
     private int controllerIndex = 0;
@@ -52,12 +52,23 @@ public class Gnome : MonoBehaviour
     private bool isMoving = false;
 
     public GameObject artWorkParent;
-    public List<ArtWork> stolenArtWork;
+    private List<ArtWork> stolenArtWork;
 
     public TrenchCoat TrenchCoat
     {
         get { return trenchCoat; }
         set { trenchCoat = value; }
+    }
+
+    public List<ArtWork> StolenArtWork
+    {
+        get { 
+            return stolenArtWork;
+        }
+        set {
+            Debug.Log("Test");
+            stolenArtWork = value;
+        }
     }
 
     void Start()
@@ -69,6 +80,7 @@ public class Gnome : MonoBehaviour
 
         myColl = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
+        walkParticleSystem = GetComponent<ParticleSystem>();
     }
 
 
@@ -239,8 +251,11 @@ public class Gnome : MonoBehaviour
             {
                 AudioManager.instance?.PlaySound(AudioEffect.gnome_general_interact, .1f);
             }
+
         }
         isMoving = lookRotation.x != 0 || lookRotation.z != 0;
+
+
 
         //rotates the gnome relative to camera rotation
         if (relativeToCamera)
@@ -271,6 +286,10 @@ public class Gnome : MonoBehaviour
             }
         }
 
+        //walk particle
+        walkParticleSystem.emissionRate = Mathf.Min(5, rb.velocity.magnitude);
+
+
         //rotates
         if (Input.GetAxis("Horizontal_P" + controllerIndex) == 0 && Input.GetAxis("Vertical_P" + controllerIndex) == 0) {
 
@@ -290,7 +309,6 @@ public class Gnome : MonoBehaviour
             {
                 GoAwayFromStack();
                 AudioManager.instance?.PlaySound(AudioEffect.gnome_yell, .4f);
-
             }
             else
             {
@@ -327,7 +345,7 @@ public class Gnome : MonoBehaviour
         }
     }
 
-        void OnDrawGizmosSelected()
+    void OnDrawGizmosSelected()
     {
         // Display the detection radius
         Gizmos.color = Color.white;

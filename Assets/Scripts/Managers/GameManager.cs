@@ -18,14 +18,28 @@ public class GameManager : MonoBehaviour
     public float musicVolume = .3f;
     public float musicPauseVolume = .1f;
 
+    [SerializeField]
+    private GameObject score1;
+
+    [SerializeField]
+    private GnomeInfo[] gnomeDatas;
+
+    private SceneLoader sceneLoader;
 
     public static GameManager instance;
     void Start()
     {
         instance = this;
 
+        sceneLoader = GetComponent<SceneLoader>();
+
         humans = FindObjectsOfType<Human>(); // one time search
         AudioManager.instance?.Playmusic(Music.museum, musicVolume);
+
+        GameManager.instance.UpdateScoreUI();
+
+        
+         StartCoroutine(fadeImage.FadeTo(1f, 0f, .5f));
     }
 
 
@@ -40,6 +54,41 @@ public class GameManager : MonoBehaviour
         pauseScreen.SetActive(val);
     }
 
+    public void Alarm()
+    {
+        StartCoroutine(fadeImage.AlarmLoop(5));
+    }
+
+    public void UpdateScoreUI ()
+    {
+        foreach(GnomeInfo gnomeData in gnomeDatas)
+        {
+            gnomeData.UpdateScore();
+        }
+    }
+
+    public void CrownIsStolen()
+    {
+        AudioManager.instance?.PlaySound(AudioEffect.congrats, .3f);
+        StartCoroutine(Ending());
+    }
+    public IEnumerator Ending()
+    {
+        yield return StartCoroutine(fadeImage.FadeTo(0, 1, 4f));
+        sceneLoader.LoadNewScene("MainMenu");
+    }
+}
 
 
+[System.Serializable]
+public class GnomeInfo
+{
+    public Gnome gnome;
+    private int score = 0;
+    public Text scoreText;
+    public void UpdateScore()
+    {
+        score = gnome.StolenArtWork.Count;
+        scoreText.text = score + "";
+    }
 }

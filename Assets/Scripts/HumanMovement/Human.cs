@@ -52,18 +52,19 @@ public class Human : MonoBehaviour
     public void RetrieveArtWorkFrom(Gnome gnome)
     {
 
-        if (gnome.stolenArtWork.Count > 0)
+        if (gnome.StolenArtWork.Count > 0)
         {
             StartCoroutine(RetrievingArt(gnome));
         }
     }
     IEnumerator RetrievingArt(Gnome gnome)
     {
-        for (int i = 0; i < Mathf.Max(1, Mathf.RoundToInt(gnome.stolenArtWork.Count / 2f)); i++)
+        for (int i = 0; i < Mathf.Max(1, Mathf.RoundToInt(gnome.StolenArtWork.Count / 2f)); i++)
         {
-            gnome.stolenArtWork[i].gameObject.SetActive(true);
-            gnome.stolenArtWork[i].CollectByHuman(this);
-            gnome.stolenArtWork.RemoveAt(i);
+            gnome.StolenArtWork[i].gameObject.SetActive(true);
+            gnome.StolenArtWork[i].CollectByHuman(this);
+            gnome.StolenArtWork.RemoveAt(i);
+            GameManager.instance.UpdateScoreUI();
             yield return new WaitForSeconds(.3f);
         }
     }

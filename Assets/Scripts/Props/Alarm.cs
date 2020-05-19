@@ -30,6 +30,7 @@ public class Alarm : MonoBehaviour
 
         if (on)
         {
+            GameManager.instance.Alarm();
             AlertHumans();
             audioS.volume = volume * Settings.SFX;
             audioS.Play();

@@ -8,7 +8,6 @@ public class FadeImage : MonoBehaviour
 
     private Image img;
     private Color color;
-
     void Start()
     {
         img = GetComponent<Image>();
@@ -26,13 +25,25 @@ public class FadeImage : MonoBehaviour
         }
     }
 
-    public IEnumerator FadeTo(float _startAlpha, float _endAlpha, float _duration)
+    public IEnumerator AlarmLoop(int amountOfLoops = 5)
     {
         StopAllCoroutines();
+        float index = 0;
+        float maxAlpha = .1f;
+        float loopDuration = .5f;
+        img.color = new Color(1,0,0,0);
+        while (index < amountOfLoops * Mathf.PI * 2)
+        {
+            index +=  Time.deltaTime / ( loopDuration / Mathf.PI);
+            yield return new WaitForFixedUpdate();
+            alpha = Mathf.Sin(index) * maxAlpha;
+        }
+    }
 
-
-        color = img.color;
-
+    public IEnumerator FadeTo(float _startAlpha, float _endAlpha, float _duration)
+    {
+        color = Color.black;
+        StopAllCoroutines();
 
         float startAlpha = _startAlpha;
         float index = 0;
