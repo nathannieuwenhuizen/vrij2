@@ -19,9 +19,6 @@ public class GameManager : MonoBehaviour
     public float musicPauseVolume = .1f;
 
     [SerializeField]
-    private GameObject score1;
-
-    [SerializeField]
     private GnomeInfo[] gnomeDatas;
 
     private SceneLoader sceneLoader;
@@ -88,7 +85,10 @@ public class GnomeInfo
     public Text scoreText;
     public void UpdateScore()
     {
-        score = gnome.StolenArtWork.Count;
+        if (gnome.StolenArtWork != null)
+        {
+            score = gnome.StolenArtWork.Count;
+        }
         scoreText.text = score + "";
     }
 }
