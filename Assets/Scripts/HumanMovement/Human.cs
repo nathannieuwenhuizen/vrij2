@@ -171,6 +171,7 @@ public class ChaseState : IState
     public Vector3 lastSeenPos;
     public void Start()
     {
+        AudioManager.instance?.PlaySound(AudioEffect.guard_catches_you, .1f);
         human.spotLight.color = Color.red;
         human.movement.StartChase(human.foundGnome.transform);
 

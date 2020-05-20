@@ -18,7 +18,7 @@ public class Walkable : MonoBehaviour
 
     private Vector3 oldPos;
 
-    private ParticleSystem walkParticle;
+    protected ParticleSystem walkParticle;
 
     [SerializeField]
     private SFXInstance walkSoundInfo;
@@ -43,7 +43,7 @@ public class Walkable : MonoBehaviour
         return false;
     }
 
-    protected void WalkStep()
+    protected virtual void WalkStep()
     {
         PlayParticle();
         PlayWalkSound();
@@ -54,6 +54,7 @@ public class Walkable : MonoBehaviour
         if (walkParticle == null) return;
         walkParticle.Emit(1);
     }
+
     private void PlayWalkSound()
     {
         if (walkSoundInfo == null) return;
