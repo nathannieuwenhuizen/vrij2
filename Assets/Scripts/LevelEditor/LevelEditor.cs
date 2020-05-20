@@ -48,6 +48,7 @@ public class LevelEditor : MonoBehaviour
     [SerializeField]
     private Material hoverMaterial;
 
+    [SerializeField]
     private EditorObject selectedObject;
 
 
@@ -186,33 +187,33 @@ public class LevelEditor : MonoBehaviour
         if (PropAtWall && selectedObject != tileObject)
         {
             float closestDistance = tileSize * 200f;
-            GameObject wallToAttach = null;
-
+            //GameObject wallToAttach = null;
+            Vector3 positionTOAttach = position;
             Vector3[] positions = {
-            new Vector3(0, 0, tileSize / 2f),
             new Vector3(0, 0, -tileSize /2f),
-            new Vector3(tileSize /2f, 0, 0),
-            new Vector3(-tileSize /2f, 0, 0) };
+            new Vector3(-tileSize /2f, 0, 0),
+            new Vector3(0, 0, tileSize / 2f),
+            new Vector3(tileSize /2f, 0, 0) };
 
+            int cIndex = 0;
+            int rotationIndex = 0;
             foreach (Vector3 pos in positions)
             {
-                GameObject wall = DetectedObject(wallObject, roundedUpPos + pos);
-                if (wall != null)
+                float dist = Vector3.Distance(position, roundedUpPos + pos);
+                if (dist < closestDistance) 
                 {
-                    float dist = Vector3.Distance(position, wall.transform.position);
-                    if (dist < closestDistance) 
-                    {
-                        closestDistance = dist;
-                        wallToAttach = wall;
-                    }
-                }
-            }
-            if (wallToAttach != null)
-            {
-                hoverObject.transform.position =  roundedUpPos + (wallToAttach.transform.position - roundedUpPos) * distanceToWall;
 
-                hoverObject.transform.rotation = wallToAttach.transform.rotation;
+                    closestDistance = dist;
+                    //wallToAttach = wall;
+                    positionTOAttach = roundedUpPos + pos;
+                    rotationIndex = cIndex;
+                }
+                cIndex++;
+
+
             }
+                hoverObject.transform.position =  roundedUpPos + (positionTOAttach - roundedUpPos) * distanceToWall;
+                hoverObject.transform.rotation =Quaternion.Euler(0,90 * rotationIndex ,0);
         }
         else {
             hoverObject.transform.rotation = hoverObject.transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -519,16 +520,13 @@ public class EditorObject
 {
     public GameObject prefab;
     [HideInInspector]
-    public Transform parent;
+    public Transform parent = null;
     public void FindParent(LevelEditor origin)
     {
+        parent = origin.transform.Find(prefab.name + " holder");
         if (parent == null)
         {
-            parent = origin.transform.Find(prefab.name + " holder");
-            if (parent == null)
-            {
-                parent = origin.createEMptyGameObject(prefab.name + " holder");
-            }
+            parent = origin.createEMptyGameObject(prefab.name + " holder");
         }
     }
     [HideInInspector]

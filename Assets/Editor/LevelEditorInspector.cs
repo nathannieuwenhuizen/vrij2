@@ -53,13 +53,13 @@ public class ObjectGroupInspector : Editor
 
         DrawDefaultInspector();
         LevelEditor myScript = (LevelEditor)target;
-        if (GUILayout.Button("Place Rock (will delete the previous rocks!)"))
-        {
-            if (myScript != null)
-            {
-                //myScript.PlaceRocks();
-            }
-        }
+        //if (GUILayout.Button("Place Rock (will delete the previous rocks!)"))
+        //{
+        //    if (myScript != null)
+        //    {
+        //        //myScript.PlaceRocks();
+        //    }
+        //}
         _choiceIndex = EditorGUILayout.Popup(_choiceIndex, toStringArray(myScript));
         if (_choiceIndex != _oldChoiceIndex)
         {
