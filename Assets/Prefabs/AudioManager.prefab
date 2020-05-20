@@ -148,15 +148,11 @@ MonoBehaviour:
   - audioEffect: 0
     audioS: {fileID: 0}
     clip:
-    - {fileID: 8300000, guid: 1854be1a7b94dfe45b839f58148f1bed, type: 3}
+    - {fileID: 8300000, guid: 021204527734fab4ea590e7b33c74a78, type: 3}
   - audioEffect: 1
     audioS: {fileID: 0}
     clip:
     - {fileID: 8300000, guid: aed5a23faa0fb1d4cb1c9a50d4494f8f, type: 3}
-  - audioEffect: 2
-    audioS: {fileID: 0}
-    clip:
-    - {fileID: 8300000, guid: 3a6712c1301556249bbf9fe12ad6c35b, type: 3}
   - audioEffect: 3
     audioS: {fileID: 0}
     clip:
@@ -189,9 +185,25 @@ MonoBehaviour:
   - audioEffect: 9
     audioS: {fileID: 0}
     clip:
-    - {fileID: 8300000, guid: 4f258cbddfcc654458f757eaa955c932, type: 3}
+    - {fileID: 8300000, guid: a5687804bced06b4eb1526b74bcb3176, type: 3}
+  - audioEffect: 11
+    audioS: {fileID: 0}
+    clip:
+    - {fileID: 8300000, guid: 9a4b920404b2ae14ebf232c8d8b02bac, type: 3}
+  - audioEffect: 10
+    audioS: {fileID: 0}
+    clip:
+    - {fileID: 8300000, guid: 45dd27e9c39c3f745bcb84303511dd26, type: 3}
+  - audioEffect: 12
+    audioS: {fileID: 0}
+    clip:
+    - {fileID: 8300000, guid: f2e980d642262974b8cb4affef02ded0, type: 3}
+  - audioEffect: 13
+    audioS: {fileID: 0}
+    clip:
+    - {fileID: 8300000, guid: ff5ad44b099967545bf1cc21093717b6, type: 3}
   musicClips:
   - music: 1
     clip: {fileID: 8300000, guid: e7d241f802bf50c4aa5cecb6424e5d60, type: 3}
   - music: 0
-    clip: {fileID: 8300000, guid: a21f4b1d543a5cd47acea939a66f1145, type: 3}
+    clip: {fileID: 8300000, guid: 138f5524a72b347498e185ee011c084f, type: 3}

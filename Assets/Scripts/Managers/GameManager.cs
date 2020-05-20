@@ -42,8 +42,8 @@ public class GameManager : MonoBehaviour
 
     public void Pause(bool val)
     {
-        AudioManager.instance?.PlaySound(AudioEffect.button_click, .4f); //TODO: button click
-        AudioManager.instance?.CHangeMusicVolume(val ? musicPauseVolume : musicVolume); // change music volume
+        AudioManager.instance?.PlaySound(AudioEffect.button_click, .4f);
+        AudioManager.instance?.ChangeMusicVolume(val ? musicPauseVolume : musicVolume); // change music volume
 
         fadeImage.alpha = val ? .5f : 0f;
         Time.timeScale = val ? 0 : 1f;
