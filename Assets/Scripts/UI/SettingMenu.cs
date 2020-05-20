@@ -15,6 +15,7 @@ public class SettingMenu : MonoBehaviour
     [SerializeField]
     private AudioSource uiClick;
 
+    private float oldSFXVal;
     void Start()
     {
         volumeSlider.value = Settings.Music;
@@ -22,11 +23,16 @@ public class SettingMenu : MonoBehaviour
 
         volumeSlider.onValueChanged.AddListener(delegate {
             Settings.Music = volumeSlider.value;
+            MenuManager.instance.ChangemusicVOlume();
         });
 
         sfxSlider.onValueChanged.AddListener(delegate {
+            if (Mathf.Abs(oldSFXVal - sfxSlider.value) > .1f)
+            {
+                oldSFXVal = sfxSlider.value;
+                uiClick.Play();
+            }
             uiClick.volume = sfxSlider.value;
-            uiClick.Play();
             Settings.SFX = sfxSlider.value;
         });
     }

@@ -10,16 +10,18 @@ public enum AudioEffect
     fountain,
     guard_catches_you,
     normal_gibberish,
-    tension_gibberish,
-    gnome_general_interact,
-    gnome_jump,
     gnome_yell,
-    popup_show
+    popup_show,
+    popup_hide,
+    painting_steal,
+    statue_steal,
+    trenchCoat_wear
 }
 public enum Music
 {
     museum,
-    guardSeesYou
+    guardSeesYou,
+    menu
 }
 
 [RequireComponent(typeof(AudioSource))]
@@ -32,7 +34,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     private List<MusicInstance> musicClips;
 
-    private AudioSource musicSource;
+    [HideInInspector]
+    public AudioSource musicSource;
     private bool musicIsFading = false;
 
     public static AudioManager instance;
@@ -95,24 +98,23 @@ public class AudioManager : MonoBehaviour
         MusicInstance selectedAudio = musicClips.Find(x => x.music == music);
 
         musicSource.clip = selectedAudio.clip;
-
         musicSource.volume = volume * Settings.Music;
         musicSource.Play();
-
     }
+
     public void StopMusic()
     {
         musicSource.Stop();
     }
 
-    public void CHangeMusicVolume(float volume)
+    public void ChangeMusicVolume(float volume)
     {
         musicSource.volume = volume * Settings.Music;
     } 
     public void FadeMusic(Music music, float duration)
     {
         StopAllCoroutines();
-        CHangeMusicVolume(GameManager.instance.musicVolume);
+        ChangeMusicVolume(GameManager.instance.musicVolume);
         //if (musicIsFading) return;
         StartCoroutine(FadingMusic(music, duration));
     }

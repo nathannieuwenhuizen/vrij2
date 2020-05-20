@@ -9,6 +9,8 @@ public class ArtWork : InteractableObject
 
     private Vector3 rotateSpeed = new Vector3(5f, 5f, 5f);
 
+    [SerializeField]
+    private AudioEffect effectSound;
 
     public override void Interact(Gnome gnome = null)
     {
@@ -20,6 +22,8 @@ public class ArtWork : InteractableObject
     {
         if (!gnome.StolenArtWork.Contains(this))
         {
+            AudioManager.instance?.PlaySound(effectSound, .4f);
+
             gnome.StolenArtWork.Add(this);
             GameManager.instance.UpdateScoreUI();
             yield return StartCoroutine(AnimateTo(gnome.artWorkParent.transform));

@@ -11,7 +11,11 @@ public class SceneLoader : MonoBehaviour {
 
     public void Quit()
     {
-        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+         Application.Quit();
+#endif
     }
 
     public void LoadNextScene()
@@ -24,4 +28,5 @@ public class SceneLoader : MonoBehaviour {
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
 }

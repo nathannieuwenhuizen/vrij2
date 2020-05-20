@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Human : MonoBehaviour
+public class Human : Walkable
 {
 
     [Range(0,180)]
@@ -32,8 +32,10 @@ public class Human : MonoBehaviour
     [HideInInspector]
     public Gnome foundGnome;
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
+
         movement = GetComponent<HumanMovement>();
         gnomes = FindObjectsOfType<Gnome>();
 
@@ -73,6 +75,8 @@ public class Human : MonoBehaviour
     private void Update()
     {
         stateMachine.Update();
+
+        WalkCycle();
         //spotLight.color = detectedGnome() != null ? Color.red : Color.yellow;
     }
 
@@ -167,6 +171,7 @@ public class ChaseState : IState
     public Vector3 lastSeenPos;
     public void Start()
     {
+        AudioManager.instance?.PlaySound(AudioEffect.guard_catches_you, .1f);
         human.spotLight.color = Color.red;
         human.movement.StartChase(human.foundGnome.transform);
 

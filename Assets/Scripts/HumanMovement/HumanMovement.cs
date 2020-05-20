@@ -136,7 +136,6 @@ public class HumanMovement : MonoBehaviour
 
     public IEnumerator Chasing(Transform target)
     {
-        Vector3 newDirection;
         agent.enabled = true;
 
         while (true)
@@ -194,6 +193,7 @@ public class HumanMovement : MonoBehaviour
 
         for (int i = 0; i < wayPoints.Length; i++)
         {
+            if (wayPoints[i] == null) return;
             Gizmos.DrawSphere(wayPoints[i].position, .1f);
             Gizmos.DrawLine(wayPoints[i].position, wayPoints[(i + 1) % wayPoints.Length].position);
         }

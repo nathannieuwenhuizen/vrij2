@@ -24,6 +24,8 @@ public class MultipleTargetsAverageFollow : MonoBehaviour {
     [SerializeField]
     private float zoomSpeed = 1f;
 
+    [SerializeField]
+    private Transform listener;
 
     public Vector3 averagePosition()
     {
@@ -60,6 +62,6 @@ public class MultipleTargetsAverageFollow : MonoBehaviour {
         transform.position = Vector3.Lerp(transform.position, tempPosition, lerpSpeed * Time.deltaTime);
 
         camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, Mathf.Max(minZoom, Mathf.Min(maxZoom, furthestTargetDistance() * 2f)), Time.deltaTime * zoomSpeed);
-
+        listener.position = averagePosition();
 	}
 }

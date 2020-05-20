@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gnome : MonoBehaviour
+public class Gnome : Walkable
 {
 
     private Rigidbody rb;
     private CapsuleCollider myColl;
     private Vector3 lookRotation;
-    private ParticleSystem walkParticleSystem;
+
+    [Header("gnome info")]
 
     [SerializeField]
     private int controllerIndex = 0;
@@ -71,8 +72,10 @@ public class Gnome : MonoBehaviour
         }
     }
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
+
         stolenArtWork = new List<ArtWork>();
         artWorkParent = new GameObject("Artworks");
         artWorkParent.transform.parent = transform;
@@ -80,7 +83,6 @@ public class Gnome : MonoBehaviour
 
         myColl = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
-        walkParticleSystem = GetComponent<ParticleSystem>();
     }
 
 
@@ -173,7 +175,7 @@ public class Gnome : MonoBehaviour
                 Destroy(rb);
                 rb = null;
             }
-            isOnTop = true;
+            IsOnTop = true;
             StartCoroutine(Jump(playerBelowMe.transform));
         } else
         {
@@ -224,19 +226,38 @@ public class Gnome : MonoBehaviour
 
             playerBelowMe.playerAboveMe = null;
             canMove = true;
-            isOnTop = false;
+            IsOnTop = false;
             rb = gameObject.AddComponent<Rigidbody>();
             rb.constraints = RigidbodyConstraints.FreezeRotation;
             myColl.enabled = true;
             playerBelowMe = null;
             transform.parent = null;
+
         } else
         {
-            Debug.Log("Should take off now");
             //discards trechcoat to the ground (makes popupacitve again)
             trenchCoat.TakeOff(this, true);
         }
 
+    }
+
+    protected override void WalkStep()
+    {
+        if (IsOnTop) { return; }
+        base.WalkStep();
+    }
+
+    public bool IsOnTop
+    {
+        get { return isOnTop; }
+        set
+        {
+            isOnTop = value;
+            if (value)
+            {
+                walkParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            } 
+        }
     }
 
     void FixedUpdate()
@@ -249,9 +270,8 @@ public class Gnome : MonoBehaviour
         {
             if (!isMoving)
             {
-                AudioManager.instance?.PlaySound(AudioEffect.gnome_general_interact, .1f);
+                //AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .1f);
             }
-
         }
         isMoving = lookRotation.x != 0 || lookRotation.z != 0;
 
@@ -286,8 +306,6 @@ public class Gnome : MonoBehaviour
             }
         }
 
-        //walk particle
-        walkParticleSystem.emissionRate = Mathf.Min(5, rb.velocity.magnitude);
 
 
         //rotates
@@ -313,9 +331,10 @@ public class Gnome : MonoBehaviour
             else
             {
                 GoToTopOfStack();
-                AudioManager.instance?.PlaySound(AudioEffect.gnome_jump, .4f);
+                AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .4f);
             }
         }
+
 
         //head animation
         if (rb != null)
@@ -323,7 +342,24 @@ public class Gnome : MonoBehaviour
             headPivot.transform.localRotation = Quaternion.Euler(-new Vector3(Vector3.Distance(Vector3.zero, rb.velocity) * hatBounciness, 0, 0));
         }
 
+        UpdateWalkCycle();
 
+        CheckInteraction();
+    }
+
+    public void UpdateWalkCycle()
+    {
+        //walk particle
+        if (!isOnTop)
+        {
+            base.WalkCycle();
+        }
+
+    }
+
+
+    public void CheckInteraction()
+    {
         //check object that is closest to player to interact with
         InteractableObject closestObject = GetClosestInteractable();
         if (closestObject != hoverObject)
@@ -339,10 +375,11 @@ public class Gnome : MonoBehaviour
             Debug.Log("interact" + controllerIndex);
             if (hoverObject != null)
             {
-                AudioManager.instance?.PlaySound(AudioEffect.gnome_general_interact, .4f);
+                AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .4f);
                 hoverObject.Interact(this);
             }
         }
+
     }
 
     void OnDrawGizmosSelected()
