@@ -326,12 +326,12 @@ public class Gnome : Walkable
             if (isOnTop)
             {
                 GoAwayFromStack();
-                AudioManager.instance?.PlaySound(AudioEffect.gnome_yell, .4f);
+                AudioManager.instance?.PlaySound(AudioEffect.gnome_yell, .1f);
             }
             else
             {
                 GoToTopOfStack();
-                AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .4f);
+                AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .1f);
             }
         }
 
@@ -375,7 +375,7 @@ public class Gnome : Walkable
             Debug.Log("interact" + controllerIndex);
             if (hoverObject != null)
             {
-                AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .4f);
+                AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .1f);
                 hoverObject.Interact(this);
             }
         }

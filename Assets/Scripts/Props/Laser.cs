@@ -24,13 +24,14 @@ public class Laser : MonoBehaviour
         RaycastHit hit;
 
         // Does the ray intersect any objects excluding the player layer
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 100))
+        if (Physics.Raycast(transform.position, transform.forward, out hit, 100))
         {
             if (hit.collider.GetComponent<Gnome>() != null)
             {
                 result = hit.collider.GetComponent<Gnome>();
-            }
-            lr.SetPosition(1, hit.point - transform.position);
+            } 
+            lr.SetPosition(0,  transform.position);
+            lr.SetPosition(1,  hit.point);
             Debug.DrawRay(transform.position, transform.forward * hit.distance, Color.yellow);
         }
         return result;
