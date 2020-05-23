@@ -38554,56 +38554,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4528648478627510948, guid: f667d5b260c73cd4494584e3224312a9,
-        type: 3}
-      propertyPath: m_AABB.m_Center.x
-      value: -0.01837778
-      objectReference: {fileID: 0}
-    - target: {fileID: 4528648478627510948, guid: f667d5b260c73cd4494584e3224312a9,
-        type: 3}
-      propertyPath: m_AABB.m_Center.y
-      value: 2.0399218
-      objectReference: {fileID: 0}
-    - target: {fileID: 4528648478627510948, guid: f667d5b260c73cd4494584e3224312a9,
-        type: 3}
-      propertyPath: m_AABB.m_Center.z
-      value: -0.06452918
-      objectReference: {fileID: 0}
-    - target: {fileID: 4528648478627510948, guid: f667d5b260c73cd4494584e3224312a9,
-        type: 3}
-      propertyPath: m_AABB.m_Extent.x
-      value: 3.090754
-      objectReference: {fileID: 0}
-    - target: {fileID: 4528648478627510948, guid: f667d5b260c73cd4494584e3224312a9,
-        type: 3}
-      propertyPath: m_AABB.m_Extent.y
-      value: 2.0338697
-      objectReference: {fileID: 0}
-    - target: {fileID: 4528648478627510948, guid: f667d5b260c73cd4494584e3224312a9,
-        type: 3}
-      propertyPath: m_AABB.m_Extent.z
-      value: 1.1100538
-      objectReference: {fileID: 0}
-    - target: {fileID: 7247960602761137449, guid: f667d5b260c73cd4494584e3224312a9,
-        type: 3}
-      propertyPath: m_AABB.m_Center.x
-      value: -0.0002617836
-      objectReference: {fileID: 0}
-    - target: {fileID: 7247960602761137449, guid: f667d5b260c73cd4494584e3224312a9,
-        type: 3}
-      propertyPath: m_AABB.m_Center.z
-      value: -0.0015630722
-      objectReference: {fileID: 0}
-    - target: {fileID: 7247960602761137449, guid: f667d5b260c73cd4494584e3224312a9,
-        type: 3}
-      propertyPath: m_AABB.m_Extent.x
-      value: 1.4841449
-      objectReference: {fileID: 0}
-    - target: {fileID: 7247960602761137449, guid: f667d5b260c73cd4494584e3224312a9,
-        type: 3}
-      propertyPath: m_AABB.m_Extent.z
-      value: 1.4632568
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f667d5b260c73cd4494584e3224312a9, type: 3}
 --- !u!1 &2005242035 stripped
@@ -41069,6 +41019,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 698393693978890757, guid: ba9260d5470d9ab4aaa78a88c9da0991,
+        type: 3}
+      propertyPath: musicClips.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: a21f4b1d543a5cd47acea939a66f1145, type: 3}
     - target: {fileID: 698393693978890758, guid: ba9260d5470d9ab4aaa78a88c9da0991,
         type: 3}
       propertyPath: m_LocalPosition.x
