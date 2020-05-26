@@ -55,6 +55,9 @@ public class Gnome : Walkable
     public GameObject artWorkParent;
     private List<ArtWork> stolenArtWork;
 
+    [SerializeField]
+    private ParticleSystem LockParticle;
+
     public TrenchCoat TrenchCoat
     {
         get { return trenchCoat; }
@@ -67,7 +70,6 @@ public class Gnome : Walkable
             return stolenArtWork;
         }
         set {
-            Debug.Log("Test");
             stolenArtWork = value;
         }
     }
@@ -209,6 +211,13 @@ public class Gnome : Walkable
             currentPos = Vector2.Lerp(new Vector2(transform.position.x, transform.position.z), desiredPos, index);
 
             transform.position = new Vector3(currentPos.x, y, currentPos.y);
+            if (index > 0.5f)
+            {
+                if (!LockParticle.isPlaying)
+                {
+                    LockParticle.Play();
+                }
+            }
         }
     }
     public void GoAwayFromStack()

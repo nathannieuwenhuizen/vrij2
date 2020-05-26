@@ -62,8 +62,8 @@ public class OffScreenPointer : MonoBehaviour
         onScreenPos.x *= camera.pixelWidth;
         onScreenPos.y *= camera.pixelHeight;
 
-        onScreenPos.x = Cap(onScreenPos.x, rc.rect.width / 4f, camera.pixelWidth - rc.rect.width / 4f);
-        onScreenPos.y = Cap(onScreenPos.y, rc.rect.height / 4f, camera.pixelHeight - rc.rect.height / 4f);
+        onScreenPos.x = Cap(onScreenPos.x, rc.rect.width / 2f, camera.pixelWidth - rc.rect.width / 2f);
+        onScreenPos.y = Cap(onScreenPos.y, rc.rect.height / 2f, camera.pixelHeight - rc.rect.height / 2f);
 
 
         rc.SetPositionAndRotation(onScreenPos, Quaternion.identity);
