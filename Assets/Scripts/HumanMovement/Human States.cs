@@ -138,7 +138,14 @@ public class ChaseState : IState
         }
         else
         {
-            lastSeenPos = human.foundGnome.transform.position;
+            if (human.foundGnome == null)
+            {
+                human.foundGnome = human.closeGnome();
+            }
+            if (human.foundGnome != null)
+            {
+                lastSeenPos = human.foundGnome.transform.position;
+            }
         }
 
         if (Vector3.Distance(human.transform.position, human.foundGnome.transform.position) < human.gnomeAttackDistance)
