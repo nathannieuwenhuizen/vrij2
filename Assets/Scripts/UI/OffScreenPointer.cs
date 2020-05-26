@@ -44,11 +44,11 @@ public class OffScreenPointer : MonoBehaviour
         onScreenPos = new Vector2(screenPos.x - 0.5f, screenPos.y - 0.5f) * 2; //2D version, new mapping
         max = Mathf.Max(Mathf.Abs(onScreenPos.x), Mathf.Abs(onScreenPos.y)); //get largest offset
         onScreenPos = (onScreenPos / (max * 2)) + new Vector2(0.5f, 0.5f); //undo mapping
-        Debug.Log(onScreenPos);
-        Debug.Log(screenPos);
+        //Debug.Log(onScreenPos);
+        //Debug.Log(screenPos);
 
         Vector2 delta = new Vector2(screenPos.x, screenPos.y) - onScreenPos;
-        Debug.Log(delta);
+        //Debug.Log(delta);
         float angle = 0;
         if (delta.y < 0)
         {
@@ -57,7 +57,7 @@ public class OffScreenPointer : MonoBehaviour
         {
             angle =  Vector2.Angle(new Vector2(1, 0), delta);
         }
-        Debug.Log(angle);
+        //Debug.Log(angle);
 
         onScreenPos.x *= camera.pixelWidth;
         onScreenPos.y *= camera.pixelHeight;
