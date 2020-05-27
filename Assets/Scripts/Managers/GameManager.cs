@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
 
     private SceneLoader sceneLoader;
 
+    private List<Human> alertedHumans;
+
     public static GameManager instance;
     void Start()
     {
@@ -34,9 +36,11 @@ public class GameManager : MonoBehaviour
         AudioManager.instance?.Playmusic(Music.museum, musicVolume);
 
         GameManager.instance.UpdateScoreUI();
-
-        
+       
          StartCoroutine(fadeImage.FadeTo(1f, 0f, .5f));
+
+        alertedHumans = new List<Human>();
+        Data.ControllerConnected();
     }
 
 
@@ -73,6 +77,31 @@ public class GameManager : MonoBehaviour
     {
         yield return StartCoroutine(fadeImage.FadeTo(0, 1, 1f));
         sceneLoader.LoadNewScene("MainMenu");
+    }
+
+    public void HumanIsAlerted(Human human)
+    {
+        if (alertedHumans.Contains(human)) return;
+
+        alertedHumans.Add(human);
+        if (alertedHumans.Count == 1)
+        {
+            AudioManager.instance?.FadeMusic(Music.guardSeesYou, 1f);
+        }
+    }
+
+    public void HumanIsNormal(Human human)
+    {
+        if (!alertedHumans.Contains(human)) return;
+
+        alertedHumans.Remove(human);
+        Debug.Log("gnome count: " + alertedHumans.Count);
+        if (alertedHumans.Count == 0)
+        {
+            Debug.Log("music fade and gnome count: " + alertedHumans.Count);
+            AudioManager.instance?.FadeMusic(Music.museum, 1f);
+
+        }
     }
 }
 

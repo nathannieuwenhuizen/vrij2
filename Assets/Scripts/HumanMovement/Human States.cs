@@ -11,6 +11,7 @@ public class PatrolState : IState
 
     public void Start()
     {
+
         human.thoughtBubble.HideUI();
 
         human.spotLight.color = Color.green;
@@ -78,7 +79,7 @@ public class NoticingState : IState
         if (human.foundGnome != null)
         {
             float distancePrecentage = 1 - Mathf.Min(.99f, Vector3.Distance(human.foundGnome.transform.position, human.transform.position) / human.detectionRange);
-            Debug.Log(distancePrecentage);
+            //Debug.Log(distancePrecentage);
             noticingPrecentage += Time.deltaTime * (noticeSpeed * (1 + distancePrecentage * 2f));
         } else
         {
@@ -124,7 +125,7 @@ public class ChaseState : IState
         human.thoughtBubble.SetSymbol(Thought.alert);
         human.thoughtBubble.FillColor = Color.red;
 
-        AudioManager.instance?.FadeMusic(Music.guardSeesYou, 1f);
+        GameManager.instance.HumanIsAlerted(human);
     }
 
     public void Run()
@@ -152,7 +153,7 @@ public class ChaseState : IState
         {
             human.RetrieveArtWorkFrom(human.foundGnome);
             AudioManager.instance?.PlaySound(AudioEffect.guard_catches_you, .3f);
-            AudioManager.instance?.FadeMusic(Music.museum, 1f);
+            GameManager.instance.HumanIsNormal(human);
             OnStateSwitch(human.patrolState);
         }
     }
@@ -172,8 +173,8 @@ public class SearchState : IState
         human.thoughtBubble.FillColor = Color.yellow;
 
         human.spotLight.color = Color.yellow;
-        Debug.Log("search pos: " + searchPos);
-        Debug.Log("my pos: " + human.transform.position);
+        //Debug.Log("search pos: " + searchPos);
+        //Debug.Log("my pos: " + human.transform.position);
         human.movement.Search(searchPos, 90, 5f);//starts searching
     }
 
@@ -181,7 +182,7 @@ public class SearchState : IState
     {
         if (!human.movement.IsMoving)
         {
-            AudioManager.instance?.FadeMusic(Music.museum, 1f);
+            GameManager.instance.HumanIsNormal(human);
             OnStateSwitch(human.patrolState);
         }
 
@@ -200,6 +201,5 @@ public class SearchState : IState
     public void Exit()
     {
         human.movement.StopMovement();
-        AudioManager.instance?.FadeMusic(Music.museum, 1f);
     }
 }

@@ -104,7 +104,7 @@ public class ThoughtBubble : MonoBehaviour
     {
         set {
             front.transform.localScale =new Vector3(back.transform.localScale.x, back.transform.localScale.y * value, back.transform.localScale.z);
-            Debug.Log(back.sprite.rect.height);
+            //Debug.Log(back.sprite.rect.height);
             front.transform.localPosition = back.transform.localPosition - new Vector3(0, 1.5f, 0 ) * (1- value);
         }
     }
