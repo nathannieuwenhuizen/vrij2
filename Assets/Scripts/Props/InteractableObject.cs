@@ -28,7 +28,7 @@ public class InteractableObject : MonoBehaviour
     private Sprite rightButton;
     private Sprite keyboardButton;
 
-
+    private Vector3 popupPos;
     private GameObject popup;
 
     private void Awake()
@@ -41,7 +41,7 @@ public class InteractableObject : MonoBehaviour
         rightButton = Resources.Load<Sprite>("UI/rb_button_icon") as Sprite;
         keyboardButton = Resources.Load<Sprite>("UI/keyboard_button") as Sprite;
 
-        popup.transform.localPosition = Vector3.zero;
+        popup.transform.localPosition = popupPos = Vector3.zero;
     }
     private void Start()
     {
@@ -51,6 +51,9 @@ public class InteractableObject : MonoBehaviour
     {
         if (popupIsActive)
         {
+            popupPos.y = Mathf.Sin(Time.time * 2f) * .2f;
+            popup.transform.localPosition = popupPos;
+
             Quaternion rotation = Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up);
             popup.transform.rotation = rotation;
             //popup.transform.LookAt(Camera.main.transform);
