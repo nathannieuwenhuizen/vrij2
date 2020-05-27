@@ -8,7 +8,7 @@ public static class Data
     public static bool ControllerConnected()
     {
         string[] names = Input.GetJoystickNames();
-        Debug.Log(names.Length);
+        //Debug.Log(names.Length);
         return names.Length > 0;
     }
 }

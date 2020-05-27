@@ -36,7 +36,7 @@ public class PostProcessingHandeler : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            ChangeChromaticDistribution(1);
+            //ChangeChromaticDistribution(1);
         }
     }
     IEnumerator ChangingChromatic(float end)

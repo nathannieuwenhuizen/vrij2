@@ -62,7 +62,7 @@ public class Human : Walkable
 
     public void RetrieveArtWorkFrom(Gnome gnome)
     {
-
+        CameraShake.instance?.Shake(.5f);
         if (gnome.StolenArtWork.Count > 0)
         {
             StartCoroutine(RetrievingArt(gnome));
@@ -83,10 +83,8 @@ public class Human : Walkable
 
     private void Update()
     {
-        stateMachine.Update();
-
+        stateMachine?.Update();
         WalkCycle();
-        //spotLight.color = detectedGnome() != null ? Color.red : Color.yellow;
     }
 
     private void OnDrawGizmosSelected()
