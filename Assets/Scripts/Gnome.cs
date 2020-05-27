@@ -161,6 +161,7 @@ public class Gnome : Walkable
             
             if (playerToAttachTo.trenchCoat != null)
             {
+                Debug.Log("trenchcoat should transfer");
                 playerToAttachTo.trenchCoat.Wear(this);
                 playerToAttachTo.trenchCoat = null;
             }
@@ -229,8 +230,8 @@ public class Gnome : Walkable
             {
                 Debug.Log("transfer to other player");
 
-                trenchCoat.Wear(playerBelowMe);
-                trenchCoat = null;
+                //trenchCoat.Wear(playerBelowMe);
+                //trenchCoat = null;
             }
 
             playerBelowMe.playerAboveMe = null;
