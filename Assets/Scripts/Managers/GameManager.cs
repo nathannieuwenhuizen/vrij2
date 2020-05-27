@@ -3,14 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+public enum GameState
+{
+    idle,
+    alert,
+    escape,
+    cutscene
+}
 public class GameManager : MonoBehaviour
 {
+
+
     [SerializeField]
     private GameObject pauseScreen;
     [SerializeField]
     private GameObject pauseButton;
     [SerializeField]
     private FadeImage fadeImage;
+    [SerializeField]
+    private PostProcessingHandeler PPHandeler;
 
     [HideInInspector]
     public Human[] humans;
@@ -24,6 +36,7 @@ public class GameManager : MonoBehaviour
     private SceneLoader sceneLoader;
 
     private List<Human> alertedHumans;
+    private GameState state = GameState.idle;
 
     public static GameManager instance;
     void Start()
@@ -43,6 +56,34 @@ public class GameManager : MonoBehaviour
         Data.ControllerConnected();
     }
 
+
+    public GameState State
+    {
+        get { return state; }
+        set
+        {
+            state = value;
+            switch (state)
+            {
+                case GameState.idle:
+                    AudioManager.instance?.FadeMusic(Music.museum, 1f);
+                    PPHandeler.ChangeChromaticDistribution(0);
+                    break;
+                case GameState.alert:
+                    AudioManager.instance?.FadeMusic(Music.guardSeesYou, 1f);
+                    PPHandeler.ChangeChromaticDistribution(0.2f);
+                    break;
+                case GameState.escape:
+
+                    PPHandeler.ChangeChromaticDistribution(1f);
+                    break;
+                case GameState.cutscene:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     public void Pause(bool val)
     {
@@ -84,9 +125,9 @@ public class GameManager : MonoBehaviour
         if (alertedHumans.Contains(human)) return;
 
         alertedHumans.Add(human);
-        if (alertedHumans.Count == 1)
+        if (alertedHumans.Count == 1 && state != GameState.escape)
         {
-            AudioManager.instance?.FadeMusic(Music.guardSeesYou, 1f);
+            State = GameState.alert;
         }
     }
 
@@ -96,13 +137,13 @@ public class GameManager : MonoBehaviour
 
         alertedHumans.Remove(human);
         Debug.Log("gnome count: " + alertedHumans.Count);
-        if (alertedHumans.Count == 0)
+        if (alertedHumans.Count == 0 && state != GameState.escape)
         {
-            Debug.Log("music fade and gnome count: " + alertedHumans.Count);
-            AudioManager.instance?.FadeMusic(Music.museum, 1f);
-
+            State = GameState.idle;
         }
     }
+
+
 }
 
 

@@ -105,6 +105,7 @@ public class NoticingState : IState
     }
     public void Exit()
     {
+        human.thoughtBubble.FillAmount = 1f;
         human.movement.StopMovement();
     }
 
