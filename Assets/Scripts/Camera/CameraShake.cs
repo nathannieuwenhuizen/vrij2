@@ -15,7 +15,7 @@ public class CameraShake : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Shake(1f);
+            //Shake(1f);
         }
     }
 

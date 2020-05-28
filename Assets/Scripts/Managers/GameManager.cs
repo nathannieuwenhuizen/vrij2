@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private PostProcessingHandeler PPHandeler;
 
+    [SerializeField]
+    private PlayerScore playerScore;
+
     [HideInInspector]
     public Human[] humans;
 
@@ -48,9 +51,8 @@ public class GameManager : MonoBehaviour
         humans = FindObjectsOfType<Human>(); // one time search
         AudioManager.instance?.Playmusic(Music.museum, musicVolume);
 
-        GameManager.instance.UpdateScoreUI();
        
-         StartCoroutine(fadeImage.FadeTo(1f, 0f, .5f));
+        StartCoroutine(fadeImage.FadeTo(1f, 0f, .5f));
 
         alertedHumans = new List<Human>();
         Data.ControllerConnected();
@@ -103,10 +105,7 @@ public class GameManager : MonoBehaviour
 
     public void UpdateScoreUI ()
     {
-        foreach(GnomeInfo gnomeData in gnomeDatas)
-        {
-            gnomeData.UpdateScore();
-        }
+        playerScore.UpdateScore(gnomeDatas[0].gnome.StolenArtWork.Count, gnomeDatas[1].gnome.StolenArtWork.Count);
     }
 
     public void CrownIsStolen()
@@ -148,17 +147,7 @@ public class GameManager : MonoBehaviour
 
 
 [System.Serializable]
-public class GnomeInfo
+public class GnomeInfo 
 {
     public Gnome gnome;
-    private int score = 0;
-    public Text scoreText;
-    public void UpdateScore()
-    {
-        if (gnome.StolenArtWork != null)
-        {
-            score = gnome.StolenArtWork.Count;
-        }
-        scoreText.text = score + "";
-    }
 }
