@@ -9969,7 +9969,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582727323}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -235, y: 0, z: 65}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 818827426}
@@ -33883,14 +33883,13 @@ MonoBehaviour:
   pauseButton: {fileID: 45081219}
   fadeImage: {fileID: 1606628904}
   PPHandeler: {fileID: 963194232}
+  playerScore: {fileID: 829567915}
   humans: []
   musicVolume: 0.3
   musicPauseVolume: 0.1
   gnomeDatas:
   - gnome: {fileID: 1982699530}
-    scoreText: {fileID: 0}
   - gnome: {fileID: 954490319}
-    scoreText: {fileID: 0}
 --- !u!4 &1711116678
 Transform:
   m_ObjectHideFlags: 0
