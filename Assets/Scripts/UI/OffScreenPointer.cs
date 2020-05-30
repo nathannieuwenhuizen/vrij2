@@ -16,11 +16,18 @@ public class OffScreenPointer : MonoBehaviour
 
     public Transform target;
 
+    private float precentage = 0.1f;
+
+    public Image icon;
+    private RectTransform iconRC;
+
     void Start()
     {
         img = GetComponent<Image>();
         rc = GetComponent<RectTransform>();
         camera = Camera.main;
+
+        iconRC = icon.GetComponent<RectTransform>();
     }
 
     void Update()
@@ -62,13 +69,13 @@ public class OffScreenPointer : MonoBehaviour
         onScreenPos.x *= camera.pixelWidth;
         onScreenPos.y *= camera.pixelHeight;
 
-        onScreenPos.x = Cap(onScreenPos.x, rc.rect.width / 2f, camera.pixelWidth - rc.rect.width / 2f);
-        onScreenPos.y = Cap(onScreenPos.y, rc.rect.height / 2f, camera.pixelHeight - rc.rect.height / 2f);
+        onScreenPos.x = Cap(onScreenPos.x, rc.rect.width * precentage, camera.pixelWidth - rc.rect.width * precentage);
+        onScreenPos.y = Cap(onScreenPos.y, rc.rect.height * precentage, camera.pixelHeight - rc.rect.height * precentage);
 
 
         rc.SetPositionAndRotation(onScreenPos, Quaternion.identity);
         rc.rotation = Quaternion.Euler(0, 0, angle);
-
+        iconRC.localRotation = Quaternion.Euler(0, 0, -angle);
     }
 
     public float Cap(float val, float min, float max)

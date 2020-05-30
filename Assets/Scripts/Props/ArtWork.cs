@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class ArtWork : InteractableObject
 {
-    private float jumpSpeed = 2f;
+    private float jumpSpeed = 1f;
     private float jumpHeight = 3f;
 
     private Vector3 rotateSpeed = new Vector3(5f, 5f, 5f);
 
     [SerializeField]
     private AudioEffect effectSound;
+
 
     public override void Interact(Gnome gnome = null)
     {
@@ -26,16 +27,16 @@ public class ArtWork : InteractableObject
 
             gnome.StolenArtWork.Add(this);
             GameManager.instance.UpdateScoreUI();
-            yield return StartCoroutine(AnimateTo(gnome.artWorkParent.transform));
+            yield return StartCoroutine(AnimateTo(gnome.pulledObject.transform, .5f));
         }
     }
 
     public void CollectByHuman(Human human)
     {
-        StartCoroutine(AnimateTo(human.transform));
+        StartCoroutine(AnimateTo(human.transform, 0));
     }
 
-    IEnumerator AnimateTo(Transform dest)
+    IEnumerator AnimateTo(Transform dest, float scale = 0)
     {
 
         transform.parent = null;
@@ -46,8 +47,9 @@ public class ArtWork : InteractableObject
         Vector2 currentPos = new Vector2();
         Vector2 desiredPos = new Vector2();
         Vector3 startScale = new Vector3(1, 1, 1);
-        Vector3 endScale = Vector3.zero;
+        Vector3 endScale = new Vector3(scale, scale, scale);
 
+        SetCollider(false);
         while (index < 1)
         {
             yield return new WaitForFixedUpdate();
@@ -64,9 +66,23 @@ public class ArtWork : InteractableObject
             transform.localScale = Vector3.Lerp(startScale, endScale, index);
             transform.Rotate(rotateSpeed);
         }
-
-        transform.rotation = Quaternion.Euler(Vector3.zero); //set roation back
+        transform.position = dest.position;
         transform.parent = dest;
-        gameObject.SetActive(false);
+        if (scale == 0)
+        {
+            transform.rotation = Quaternion.Euler(Vector3.zero); //set roation back
+            gameObject.SetActive(false);
+        } else
+        {
+            SetCollider(true);
+        }
+    }
+
+    public void SetCollider(bool val)
+    {
+        foreach(Collider child in GetComponentsInChildren<Collider>())
+        {
+            child.enabled = val;
+        }
     }
 }
