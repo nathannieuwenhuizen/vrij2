@@ -35,7 +35,6 @@ public class ThoughtBubble : MonoBehaviour
     {
         endScale = endScale / transform.localScale.x;
 
-        transform.localPosition = Vector3.zero;
     }
     private void Start()
     {

@@ -21,7 +21,8 @@ public enum Music
 {
     museum,
     guardSeesYou,
-    menu
+    menu,
+    park
 }
 
 [RequireComponent(typeof(AudioSource))]

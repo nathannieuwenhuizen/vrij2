@@ -291,6 +291,7 @@ public class Gnome : Walkable
         //play sound when gnome starts moving
         if (lookRotation.x != 0 || lookRotation.z != 0)
         {
+            ParkManager.instance?.FirstMovement();
             if (!isMoving)
             {
                 //AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .1f);
@@ -340,8 +341,14 @@ public class Gnome : Walkable
         }
 
         CheckRopePull();
+    }
 
-
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "End")
+        {
+            BaseManager.instance?.End(); 
+        }
     }
 
     public void CheckRopePull()
@@ -370,6 +377,8 @@ public class Gnome : Walkable
         //stack/unstack to other players
         if (Input.GetButtonDown("Fire_P" + controllerIndex))
         {
+            BaseManager.instance?.FirstJump();
+
             if (isOnTop)
             {
                 GoAwayFromStack();

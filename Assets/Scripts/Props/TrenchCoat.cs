@@ -17,6 +17,7 @@ public class TrenchCoat : InteractableObject
         if (gnome.playerAboveMe != null) { Wear(gnome.playerAboveMe); return; }
 
         AudioManager.instance?.PlaySound(AudioEffect.trenchCoat_wear, .6f);
+        ParkManager.instance?.TrenchCoatWear();
 
         transform.parent = gnome.transform;
         gnome.TrenchCoat = this;

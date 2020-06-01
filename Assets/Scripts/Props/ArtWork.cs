@@ -26,7 +26,7 @@ public class ArtWork : InteractableObject
             AudioManager.instance?.PlaySound(effectSound, .4f);
 
             gnome.StolenArtWork.Add(this);
-            GameManager.instance.UpdateScoreUI();
+            BaseManager.instance?.UpdateScoreUI();
             yield return StartCoroutine(AnimateTo(gnome.pulledObject.transform, .5f));
         }
     }
