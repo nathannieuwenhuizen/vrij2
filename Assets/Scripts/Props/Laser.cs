@@ -12,6 +12,11 @@ public class Laser : MonoBehaviour
     [SerializeField]
     private UnityEvent hitEvent;
 
+    private float laserWidth;
+    [SerializeField]
+    private float minLaserWidth;
+    [SerializeField]
+    private float maxLaserWidth;
 
     void Start()
     {
@@ -32,7 +37,7 @@ public class Laser : MonoBehaviour
             } 
             lr.SetPosition(0,  transform.position);
             lr.SetPosition(1,  hit.point);
-            Debug.DrawRay(transform.position, transform.forward * hit.distance, Color.yellow);
+            //Debug.DrawRay(transform.position, transform.forward * hit.distance, Color.yellow);
         }
         return result;
             
@@ -40,6 +45,8 @@ public class Laser : MonoBehaviour
 
     void Update()
     {
+        laserWidth = minLaserWidth + Mathf.Sin(Time.deltaTime) * (maxLaserWidth - minLaserWidth);
+        lr.startWidth = lr.endWidth = laserWidth;
 
         if (RaycastGnome() != null && hitEvent != null)
         {

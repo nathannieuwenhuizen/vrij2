@@ -26,8 +26,9 @@ public class InteractableObject : MonoBehaviour
 
     private Sprite leftButton;
     private Sprite rightButton;
+    private Sprite keyboardButton;
 
-
+    private Vector3 popupPos;
     private GameObject popup;
 
     private void Awake()
@@ -38,8 +39,9 @@ public class InteractableObject : MonoBehaviour
 
         leftButton = Resources.Load<Sprite>("UI/lb_button_icon") as Sprite;
         rightButton = Resources.Load<Sprite>("UI/rb_button_icon") as Sprite;
+        keyboardButton = Resources.Load<Sprite>("UI/keyboard_button") as Sprite;
 
-        popup.transform.localPosition = Vector3.zero;
+        popup.transform.localPosition = popupPos = Vector3.zero;
     }
     private void Start()
     {
@@ -49,6 +51,9 @@ public class InteractableObject : MonoBehaviour
     {
         if (popupIsActive)
         {
+            popupPos.y = Mathf.Sin(Time.time * 2f) * .2f;
+            popup.transform.localPosition = popupPos;
+
             Quaternion rotation = Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up);
             popup.transform.rotation = rotation;
             //popup.transform.LookAt(Camera.main.transform);
@@ -75,8 +80,22 @@ public class InteractableObject : MonoBehaviour
         isVisible = true;
 
         AudioManager.instance?.PlaySound(AudioEffect.popup_show, .1f);
-        popup.transform.Find("button").GetComponent<SpriteRenderer>().sprite = controllerIndex == 2 ? rightButton : leftButton;
-        popup.GetComponentInChildren<TextMesh>().text = popUpText;
+
+        popup.transform.Find("text").GetComponent<TextMesh>().text = popUpText;
+
+        if (Data.ControllerConnected())
+        {
+            popup.transform.Find("button").GetComponent<SpriteRenderer>().sprite = controllerIndex == 2 ? rightButton : leftButton;
+            popup.transform.Find("KeyboardText").GetComponent<TextMesh>().text = "";
+        }
+        else
+        {
+            popup.transform.Find("button").GetComponent<SpriteRenderer>().sprite = keyboardButton;
+            popup.transform.Find("KeyboardText").GetComponent<TextMesh>().text = controllerIndex == 2 ? "Q" : "/";
+        }
+
+
+
         StartCoroutine(Animate(showCurve, 0, endScale));
     }
     IEnumerator Animate(AnimationCurve curve, float beginScale, float endScale)

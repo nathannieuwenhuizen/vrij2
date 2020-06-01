@@ -267,6 +267,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  minLaserWidth: 0.1
+  maxLaserWidth: 0.7
 --- !u!1001 &3289519072311028290
 PrefabInstance:
   m_ObjectHideFlags: 0

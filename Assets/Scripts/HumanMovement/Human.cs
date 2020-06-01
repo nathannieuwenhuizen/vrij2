@@ -11,8 +11,10 @@ public class Human : Walkable
     private float detectionAngle = 90f;
     [Range(1,10)]
     [SerializeField]
-    private float detectionRange = 2f;
+    public float detectionRange = 2f;
 
+    public ViewInfo noticingView;
+    public ViewInfo closeView;
     public Light spotLight;
 
     [HideInInspector]
@@ -26,8 +28,12 @@ public class Human : Walkable
     public ChaseState chaseState;
     public SearchState searchState;
     public PatrolState patrolState;
+    public NoticingState noticingState;
+
+    public ThoughtBubble thoughtBubble;
 
     public float gnomeAttackDistance = 2f;
+
 
     [HideInInspector]
     public Gnome foundGnome;
@@ -42,6 +48,8 @@ public class Human : Walkable
 
         patrolState = new PatrolState();
         patrolState.human = this;
+        noticingState = new NoticingState();
+        noticingState.human = this;
         chaseState = new ChaseState();
         chaseState.human = this;
         searchState = new SearchState();
@@ -49,11 +57,12 @@ public class Human : Walkable
 
         stateMachine = new FSM(patrolState);
 
-    }
+
+     }
 
     public void RetrieveArtWorkFrom(Gnome gnome)
     {
-
+        CameraShake.instance?.Shake(.5f);
         if (gnome.StolenArtWork.Count > 0)
         {
             StartCoroutine(RetrievingArt(gnome));
@@ -74,36 +83,41 @@ public class Human : Walkable
 
     private void Update()
     {
-        stateMachine.Update();
-
+        stateMachine?.Update();
         WalkCycle();
-        //spotLight.color = detectedGnome() != null ? Color.red : Color.yellow;
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
+        DrawFieldLine(noticingView);
+        Gizmos.color = Color.red;
+        DrawFieldLine(closeView);
+    }
+    public void DrawFieldLine(ViewInfo viewInfo)
+    {
 
-        Vector3 rightLine = Vector3.Lerp(transform.forward, -transform.right, detectionAngle / 180).normalized * detectionRange;
-        Vector3 leftLine = Vector3.Lerp(transform.forward, transform.right, detectionAngle / 180).normalized * detectionRange;
+        Vector3 rightLine = Vector3.Lerp(transform.forward, -transform.right, viewInfo.angle / 180).normalized * viewInfo.range;
+        Vector3 leftLine = Vector3.Lerp(transform.forward, transform.right, viewInfo.angle / 180).normalized * viewInfo.range;
 
-        #if (UNITY_EDITOR)
-        UnityEditor.Handles.DrawWireArc(transform.position, transform.up, rightLine, detectionAngle, detectionRange);
+#if (UNITY_EDITOR)
+        UnityEditor.Handles.DrawWireArc(transform.position, transform.up, rightLine, viewInfo.angle, viewInfo.range);
         UnityEditor.Handles.DrawLine(transform.position, transform.position + rightLine);
         UnityEditor.Handles.DrawLine(transform.position, transform.position + leftLine);
-        #endif  
+#endif
+
     }
 
-    public Gnome detectedGnome()
+    public Gnome detectedGnome(ViewInfo viewInfo)
     {
         Gnome result = null;
 
         foreach(Gnome gnome in gnomes)
         {
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, gnome.transform.position - transform.position, out hit, detectionRange))
+            if (Physics.Raycast(transform.position, gnome.transform.position - transform.position, out hit, viewInfo.range))
             {
-                if (Vector3.Angle(transform.forward, hit.transform.position - transform.position) < detectionAngle / 2)
+                if (Vector3.Angle(transform.forward, hit.transform.position - transform.position) < viewInfo.angle / 2)
                 {
                     if (hit.transform.GetComponent<Gnome>() != null)
                     {
@@ -125,117 +139,30 @@ public class Human : Walkable
         } 
         return result;
     }
+    public Gnome noticingGnome()
+    {
+        return detectedGnome(noticingView);
+    }
+    public Gnome closeGnome()
+    {
+        return detectedGnome(closeView);
+    }
 
 
     //editor only
     public void UpdateLight()
     {
         if (spotLight == null) return;
-        spotLight.spotAngle = detectionAngle;
-        spotLight.range = detectionRange;
+        spotLight.spotAngle = noticingView.angle;
+        spotLight.range = noticingView.range;
     }
 }
 
-public class PatrolState : IState
+[System.Serializable]
+public class ViewInfo
 {
-    public ILiveStateDelegate OnStateSwitch { get; set; }
-    public Human human;
-    public Gnome lastDetectedGnome;
-    public void Start()
-    {
-
-        human.spotLight.color = Color.green;
-        human.movement.StartPatrolling();
-    }
-
-    public void Run()
-    {
-
-        human.foundGnome = human.detectedGnome();
-        if (human.foundGnome != null && lastDetectedGnome == null)
-        {
-            OnStateSwitch(human.chaseState);
-        }
-        lastDetectedGnome = human.foundGnome;
-    }
-    public void Exit()
-    {
-        human.movement.StopMovement();
-    }
-
-}
-public class ChaseState : IState
-{
-    public ILiveStateDelegate OnStateSwitch { get; set; }
-    public Human human;
-    public Vector3 lastSeenPos;
-    public void Start()
-    {
-        AudioManager.instance?.PlaySound(AudioEffect.guard_catches_you, .1f);
-        human.spotLight.color = Color.red;
-        human.movement.StartChase(human.foundGnome.transform);
-
-        AudioManager.instance?.FadeMusic(Music.guardSeesYou, 1f);
-    }
-
-    public void Run()
-    {
-        human.foundGnome = human.detectedGnome();
-        if (human.foundGnome == null)
-        {
-            human.searchState.searchPos = lastSeenPos;
-            OnStateSwitch(human.searchState);
-            return;
-        } else
-        {
-            lastSeenPos = human.foundGnome.transform.position;
-        }
-
-        if (Vector3.Distance(human.transform.position, human.foundGnome.transform.position) < human.gnomeAttackDistance)
-        {
-            human.RetrieveArtWorkFrom(human.foundGnome);
-            AudioManager.instance?.PlaySound(AudioEffect.guard_catches_you, .3f);
-            AudioManager.instance?.FadeMusic(Music.museum, 1f);
-            OnStateSwitch(human.patrolState);
-        }
-    }
-
-    public void Exit()
-    {
-        human.movement.StopMovement();
-    }
-}
-public class SearchState : IState
-{
-    public ILiveStateDelegate OnStateSwitch { get; set; }
-    public Human human;
-    public Vector3 searchPos;
-    public void Start()
-    {
-        human.spotLight.color = Color.yellow;
-        Debug.Log("search pos: " + searchPos);
-        Debug.Log("my pos: " + human.transform.position);
-        human.movement.Search(searchPos, 90, 5f);//starts searching
-    }
-
-    public void Run()
-    {
-        if (!human.movement.IsMoving)
-        {
-            AudioManager.instance?.FadeMusic(Music.museum, 1f);
-            OnStateSwitch(human.patrolState);
-        }
-
-        human.foundGnome = human.detectedGnome();
-        if (human.foundGnome != null)
-        {
-            OnStateSwitch(human.chaseState);
-        }
-    }
-
-    public void Exit()
-    {
-        human.movement.StopMovement();
-        AudioManager.instance?.FadeMusic(Music.museum, 1f);
-    }
+    [Range(1, 20)]
+    public float range = 5f;
+    [Range(0, 360)]
+    public float angle = 90f;
 }

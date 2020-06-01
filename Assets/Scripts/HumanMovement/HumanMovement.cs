@@ -177,7 +177,6 @@ public class HumanMovement : MonoBehaviour
             index += Time.deltaTime;
             transform.rotation = Quaternion.Euler( new Vector3(0, startRotation + (angle / 2f + Mathf.Sin(index /searchDuration *Mathf.PI * 2) * angle), 0));
             yield return new WaitForFixedUpdate();
-            Debug.Log("index: " + index); 
 
         }
         agent.enabled = true;

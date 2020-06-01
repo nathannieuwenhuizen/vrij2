@@ -16,11 +16,18 @@ public class OffScreenPointer : MonoBehaviour
 
     public Transform target;
 
+    private float precentage = 0.1f;
+
+    public Image icon;
+    private RectTransform iconRC;
+
     void Start()
     {
         img = GetComponent<Image>();
         rc = GetComponent<RectTransform>();
         camera = Camera.main;
+
+        iconRC = icon.GetComponent<RectTransform>();
     }
 
     void Update()
@@ -44,11 +51,11 @@ public class OffScreenPointer : MonoBehaviour
         onScreenPos = new Vector2(screenPos.x - 0.5f, screenPos.y - 0.5f) * 2; //2D version, new mapping
         max = Mathf.Max(Mathf.Abs(onScreenPos.x), Mathf.Abs(onScreenPos.y)); //get largest offset
         onScreenPos = (onScreenPos / (max * 2)) + new Vector2(0.5f, 0.5f); //undo mapping
-        Debug.Log(onScreenPos);
-        Debug.Log(screenPos);
+        //Debug.Log(onScreenPos);
+        //Debug.Log(screenPos);
 
         Vector2 delta = new Vector2(screenPos.x, screenPos.y) - onScreenPos;
-        Debug.Log(delta);
+        //Debug.Log(delta);
         float angle = 0;
         if (delta.y < 0)
         {
@@ -57,18 +64,18 @@ public class OffScreenPointer : MonoBehaviour
         {
             angle =  Vector2.Angle(new Vector2(1, 0), delta);
         }
-        Debug.Log(angle);
+        //Debug.Log(angle);
 
         onScreenPos.x *= camera.pixelWidth;
         onScreenPos.y *= camera.pixelHeight;
 
-        onScreenPos.x = Cap(onScreenPos.x, rc.rect.width / 4f, camera.pixelWidth - rc.rect.width / 4f);
-        onScreenPos.y = Cap(onScreenPos.y, rc.rect.height / 4f, camera.pixelHeight - rc.rect.height / 4f);
+        onScreenPos.x = Cap(onScreenPos.x, rc.rect.width * precentage, camera.pixelWidth - rc.rect.width * precentage);
+        onScreenPos.y = Cap(onScreenPos.y, rc.rect.height * precentage, camera.pixelHeight - rc.rect.height * precentage);
 
 
         rc.SetPositionAndRotation(onScreenPos, Quaternion.identity);
         rc.rotation = Quaternion.Euler(0, 0, angle);
-
+        iconRC.localRotation = Quaternion.Euler(0, 0, -angle);
     }
 
     public float Cap(float val, float min, float max)

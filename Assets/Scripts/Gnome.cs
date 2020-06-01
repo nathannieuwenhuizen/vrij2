@@ -53,7 +53,17 @@ public class Gnome : Walkable
     private bool isMoving = false;
 
     public GameObject artWorkParent;
-    private List<ArtWork> stolenArtWork;
+    private List<ArtWork> stolenArtWork;//save just in case
+
+    [SerializeField]
+    private ParticleSystem LockParticle;
+
+    [SerializeField]
+    private LineRenderer rope;
+
+    [HideInInspector]
+    public Rigidbody pulledObject;
+    private float maxDistance = 5f;
 
     public TrenchCoat TrenchCoat
     {
@@ -67,7 +77,6 @@ public class Gnome : Walkable
             return stolenArtWork;
         }
         set {
-            Debug.Log("Test");
             stolenArtWork = value;
         }
     }
@@ -76,10 +85,16 @@ public class Gnome : Walkable
     {
         base.Start();
 
+
+        pulledObject = new GameObject("Bag").AddComponent<Rigidbody>();
+        pulledObject.mass = 0;
+        pulledObject.gameObject.AddComponent<SphereCollider>().radius = 0.5f;
+        pulledObject.transform.position = transform.position;
+
         stolenArtWork = new List<ArtWork>();
-        artWorkParent = new GameObject("Artworks");
-        artWorkParent.transform.parent = transform;
-        artWorkParent.transform.localPosition = new Vector2(0, 0);
+        //artWorkParent = new GameObject("Artworks");
+        //artWorkParent.transform.parent = transform;
+        //artWorkParent.transform.localPosition = new Vector2(0, 0);
 
         myColl = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
@@ -159,6 +174,7 @@ public class Gnome : Walkable
             
             if (playerToAttachTo.trenchCoat != null)
             {
+                Debug.Log("trenchcoat should transfer");
                 playerToAttachTo.trenchCoat.Wear(this);
                 playerToAttachTo.trenchCoat = null;
             }
@@ -209,6 +225,13 @@ public class Gnome : Walkable
             currentPos = Vector2.Lerp(new Vector2(transform.position.x, transform.position.z), desiredPos, index);
 
             transform.position = new Vector3(currentPos.x, y, currentPos.y);
+            if (index > 0.5f)
+            {
+                if (!LockParticle.isPlaying)
+                {
+                    LockParticle.Play();
+                }
+            }
         }
     }
     public void GoAwayFromStack()
@@ -220,8 +243,8 @@ public class Gnome : Walkable
             {
                 Debug.Log("transfer to other player");
 
-                trenchCoat.Wear(playerBelowMe);
-                trenchCoat = null;
+                //trenchCoat.Wear(playerBelowMe);
+                //trenchCoat = null;
             }
 
             playerBelowMe.playerAboveMe = null;
@@ -316,7 +339,31 @@ public class Gnome : Walkable
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookRotation), Time.deltaTime * turnSpeed);
         }
 
+        CheckRopePull();
 
+
+    }
+
+    public void CheckRopePull()
+    {
+        if (pulledObject == null) return;
+        if (Vector3.Distance(pulledObject.transform.position, transform.position) > maxDistance)
+        {
+            Vector3 dist = transform.position - pulledObject.transform.position;
+            pulledObject.velocity = dist * 0.8f;
+            if (dist.magnitude > maxDistance * 2f)
+            {
+                pulledObject.transform.position = transform.position;
+            }
+        }
+        if (stolenArtWork.Count > 0)
+        {
+            rope.enabled = true;
+            rope.SetPosition(1, transform.InverseTransformDirection(stolenArtWork[0].transform.position - rope.transform.position ) );
+        } else
+        {
+            rope.enabled = false;
+        }
     }
     private void Update()
     {
