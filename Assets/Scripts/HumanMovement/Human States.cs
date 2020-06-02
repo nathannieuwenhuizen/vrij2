@@ -154,7 +154,7 @@ public class ChaseState : IState
         {
             human.RetrieveArtWorkFrom(human.foundGnome);
             AudioManager.instance?.PlaySound(AudioEffect.guard_catches_you, .3f);
-            GameManager.instance.HumanIsNormal(human);
+            BaseManager.instance.HumanIsNormal(human);
             OnStateSwitch(human.patrolState);
         }
     }

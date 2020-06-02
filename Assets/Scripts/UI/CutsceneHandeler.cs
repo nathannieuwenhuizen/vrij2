@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CutsceneHandeler : MonoBehaviour
 {
     [SerializeField]
-    private float letterPause = 0.05f;
+    private float letterPause = 0.02f;
 
     [SerializeField]
     private Transform cameraFocus;
@@ -31,6 +31,9 @@ public class CutsceneHandeler : MonoBehaviour
     private AnimationCurve cameraCurve = AnimationCurve.EaseInOut(0,0,1,1);
 
     private bool skip = false;
+
+    public bool inCutscene = false;
+
     // Use this for initialization
     void Start()
     {
@@ -102,6 +105,7 @@ public class CutsceneHandeler : MonoBehaviour
 
     public IEnumerator InDialogue(SpokenLine[] dialogue, Transform cameraPos)
     {
+        inCutscene = true;
         EnableCameraFollowTargets(false);
 
         StartCoroutine(AnimateBlackBars(true));
@@ -148,7 +152,7 @@ public class CutsceneHandeler : MonoBehaviour
         EnableCameraFollowTargets(true);
 
 
-
+        inCutscene = false;
     }
     public bool NextButtonDown()
     {
@@ -177,7 +181,8 @@ public class CutsceneHandeler : MonoBehaviour
             dialogueText.text += letter;
             if (!skip)
             {
-                yield return new WaitForSeconds(letterPause);
+                yield return new WaitForFixedUpdate();
+                //yield return new WaitForSeconds(letterPause);
             }
         }
     }

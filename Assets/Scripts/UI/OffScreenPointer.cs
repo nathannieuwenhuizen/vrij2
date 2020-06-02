@@ -47,6 +47,7 @@ public class OffScreenPointer : MonoBehaviour
         }
 
         img.enabled = true;
+        icon.enabled = true;
 
         onScreenPos = new Vector2(screenPos.x - 0.5f, screenPos.y - 0.5f) * 2; //2D version, new mapping
         max = Mathf.Max(Mathf.Abs(onScreenPos.x), Mathf.Abs(onScreenPos.y)); //get largest offset
@@ -85,6 +86,7 @@ public class OffScreenPointer : MonoBehaviour
 
     public void Hide()
     {
+        icon.enabled = false;
         img.enabled = false;
     }
 }
