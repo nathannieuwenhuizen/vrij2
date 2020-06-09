@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.43795165, g: 0.485906, b: 0.5661832, a: 1}
+  m_IndirectSpecularColor: {r: 0.43795222, g: 0.4859069, b: 0.56618446, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11039,7 +11039,7 @@ PrefabInstance:
     - target: {fileID: 6169544798691992303, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
       propertyPath: m_Name
-      value: Gnome 2
+      value: David
       objectReference: {fileID: 0}
     - target: {fileID: 6169544798691992305, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
@@ -39569,7 +39569,7 @@ PrefabInstance:
         type: 3}
       propertyPath: musicClips.Array.data[1].clip
       value: 
-      objectReference: {fileID: 8300000, guid: a21f4b1d543a5cd47acea939a66f1145, type: 3}
+      objectReference: {fileID: 8300000, guid: 138f5524a72b347498e185ee011c084f, type: 3}
     - target: {fileID: 698393693978890758, guid: ba9260d5470d9ab4aaa78a88c9da0991,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -39926,10 +39926,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4381533276676335414, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6169544798691992303, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
       propertyPath: m_Name
-      value: Gnome
+      value: Ronald
       objectReference: {fileID: 0}
     - target: {fileID: 6169544798691992305, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
@@ -39985,6 +39990,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7166661724382051957, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30b461c12ffefa24cb1e79e88f9d7a0d, type: 3}
