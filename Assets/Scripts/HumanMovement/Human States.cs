@@ -38,12 +38,12 @@ public class PatrolState : IState
         if (noticingGnome == null && closeGnome == null)
         {
             lastDetectedGnome = null;
-        } else if (noticingGnome != null)
-        {
-            lastDetectedGnome = noticingGnome;
         } else if (closeGnome != null)
         {
             lastDetectedGnome = closeGnome;
+        } else if (noticingGnome != null)
+        {
+            lastDetectedGnome = noticingGnome;
         }
     }
     public void Exit()

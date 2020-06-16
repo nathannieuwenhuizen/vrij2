@@ -12,7 +12,7 @@ public class MultipleTargetsAverageFollow : MonoBehaviour {
     private Transform[] targets;
 
     //tempPostiion is the vector3 variable that will be calculated.
-    private Vector3 tempPosition;
+    private Vector3 averagePos;
 
     private Camera camera;
 
@@ -27,27 +27,49 @@ public class MultipleTargetsAverageFollow : MonoBehaviour {
     [SerializeField]
     private Transform listener;
 
-    public Vector3 averagePosition()
+    [HideInInspector]
+    public FocusArea focusArea; 
+    public static MultipleTargetsAverageFollow instance;
+
+    private Vector3 averagePosition(bool withAreaFocus = false)
     {
         Vector3 temp = Vector3.zero;
         for (int i = 0; i < targets.Length; i++)
         {
             temp += targets[i].position;
         }
-        temp /= targets.Length;
+
+        float amountOfOtherTargets = 0;
+
+        if (withAreaFocus && focusArea != null)
+        {
+            temp += new Vector3(focusArea.transform.position.x, 0, focusArea.transform.position.z);
+            amountOfOtherTargets++;
+        }
+
+        temp /= (targets.Length + amountOfOtherTargets);
+
+
         return temp;
     }
-
     public float furthestTargetDistance()
     {
         float distance = 0;
         for (int i = 0; i < targets.Length; i++)
         {
-            distance = Mathf.Max(Vector3.Distance( tempPosition - offset, targets[i].position), distance);
+            distance = Mathf.Max(Vector3.Distance( averagePos, targets[i].position), distance);
+        }
+        if (focusArea != null)
+        {
+            distance = Mathf.Max(Vector3.Distance(averagePos, focusArea.transform.position), distance);
         }
         return distance;
     }
 
+    private void Awake()
+    {
+        instance = this;
+    }
     private void Start()
     {
         offset = transform.position - averagePosition();
@@ -56,12 +78,15 @@ public class MultipleTargetsAverageFollow : MonoBehaviour {
 
     void Update () {
 
-        tempPosition = averagePosition() + offset;
+        averagePos = averagePosition(true);
 
         //transform.position = tempPosition;
-        transform.position = Vector3.Lerp(transform.position, tempPosition, lerpSpeed * Time.deltaTime);
-
-        camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, Mathf.Max(minZoom, Mathf.Min(maxZoom, furthestTargetDistance() * 2f)), Time.deltaTime * zoomSpeed);
+        float offsetScale = (minZoom + furthestTargetDistance() * maxZoom);
+        //Debug.Log(offsetScale);
+        offset = Vector3.Lerp(offset, offset.normalized * offsetScale, Time.deltaTime * zoomSpeed);
+        transform.position = Vector3.Lerp(transform.position, averagePos + offset, lerpSpeed * Time.deltaTime);
+        
+        //camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, Mathf.Max(minZoom, Mathf.Min(maxZoom, furthestTargetDistance() * 2f)), Time.deltaTime * zoomSpeed);
         listener.position = averagePosition();
 	}
 }

@@ -66,6 +66,7 @@ public class BaseManager : MonoBehaviour
 
     public virtual void Start()
     {
+        Debug.Log("Start");
         humans = FindObjectsOfType<Human>(); // one time search
         //StartCoroutine(fadeImage.FadeTo(1f, 0f, .5f));
 
@@ -145,6 +146,10 @@ public class BaseManager : MonoBehaviour
     public IEnumerator FadeToScene(string sceneName = "MainMenu")
     {
         yield return StartCoroutine(fadeImage.FadeTo(0, 1, 1f));
+        if (sceneLoader == null)
+        {
+            sceneLoader = GetComponent<SceneLoader>();
+        }
         sceneLoader.LoadNewScene(sceneName);
     }
 

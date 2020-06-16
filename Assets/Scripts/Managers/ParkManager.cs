@@ -23,7 +23,7 @@ public class ParkManager : BaseManager
 
         instance = this;
         musicVolume = .1f;
-        musicPauseVolume = .05f;
+        musicPauseVolume = .05f; 
         AudioManager.instance?.Playmusic(Music.park, musicVolume);
 
         StartCoroutine(IntroCutscene());

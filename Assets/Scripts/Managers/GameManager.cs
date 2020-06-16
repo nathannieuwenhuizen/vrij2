@@ -13,6 +13,7 @@ public class GameManager : BaseManager
 
     public override void Start()
     {
+        base.Start();
         instance = this;
 
         AudioManager.instance?.Playmusic(Music.museum, musicVolume);

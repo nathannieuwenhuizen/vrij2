@@ -18,6 +18,12 @@ public class Laser : MonoBehaviour
     [SerializeField]
     private float maxLaserWidth;
 
+    [SerializeField]
+    private FloorButton button;
+    [SerializeField]
+    private bool reverse = false;
+    private bool isOn = true;
+
     void Start()
     {
         lr = GetComponent<LineRenderer>();
@@ -43,14 +49,32 @@ public class Laser : MonoBehaviour
             
     }
 
-    void Update()
+    void CheckButton()
     {
-        laserWidth = minLaserWidth + Mathf.Sin(Time.deltaTime) * (maxLaserWidth - minLaserWidth);
-        lr.startWidth = lr.endWidth = laserWidth;
-
-        if (RaycastGnome() != null && hitEvent != null)
+        if (button != null)
         {
-            hitEvent.Invoke();
+            isOn = reverse ? !button.Pushed : button.Pushed;
+        }
+    }
+    void Update()
+    { 
+
+        CheckButton();
+
+        if (isOn)
+        {
+            lr.enabled = true;
+
+            laserWidth = minLaserWidth + Mathf.Sin(Time.deltaTime) * (maxLaserWidth - minLaserWidth);
+            lr.startWidth = lr.endWidth = laserWidth;
+
+            if (RaycastGnome() != null && hitEvent != null)
+            {
+                hitEvent.Invoke();
+            }
+        } else
+        {
+            lr.enabled = false;
         }
     }
 

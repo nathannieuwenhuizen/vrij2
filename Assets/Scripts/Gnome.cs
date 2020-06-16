@@ -348,7 +348,29 @@ public class Gnome : Walkable
         if (other.gameObject.tag == "End")
         {
             BaseManager.instance?.End(); 
+        } else if (other.gameObject.tag == "Button")
+        {
+            other.GetComponent<FloorButton>()?.Push(this);
         }
+
+        if (other.GetComponent<FocusArea>() != null)
+        {
+            other.GetComponent<FocusArea>().Focus(this);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Button")
+        {
+            other.GetComponent<FloorButton>()?.Release(this);
+        }
+
+        if (other.GetComponent<FocusArea>() != null)
+        {
+            other.GetComponent<FocusArea>().Unfocus(this);
+        }
+
     }
 
     public void CheckRopePull()

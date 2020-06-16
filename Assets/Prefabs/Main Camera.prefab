@@ -144,9 +144,9 @@ MonoBehaviour:
   targets:
   - {fileID: 0}
   - {fileID: 0}
-  maxZoom: 12
+  maxZoom: 0.5
   minZoom: 10
-  zoomSpeed: 1
+  zoomSpeed: 10
   listener: {fileID: 4859907474168393949}
 --- !u!114 &4859907474548332468
 MonoBehaviour:
