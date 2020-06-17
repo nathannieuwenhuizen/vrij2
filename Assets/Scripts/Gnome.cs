@@ -59,6 +59,9 @@ public class Gnome : Walkable
     private ParticleSystem LockParticle;
 
     [SerializeField]
+    private BalanceUI balanceUI;
+
+    [SerializeField]
     private LineRenderer rope;
 
     [HideInInspector]
@@ -179,11 +182,15 @@ public class Gnome : Walkable
                 playerToAttachTo.trenchCoat = null;
             }
 
+            balanceUI.ShowUI();
+
             playerBelowMe = playerToAttachTo;
             playerToAttachTo.playerAboveMe = this;
             rb.velocity = Vector3.zero;
             myColl.enabled = false;
             transform.parent = playerToAttachTo.headPivot;
+            transform.localRotation = Quaternion.Euler(Vector3.zero);
+
             //transform.position = playerToAttachTo.transform.position + new Vector3(0, 2, 0);
             canMove = false;
             if (rb != null)
@@ -249,14 +256,19 @@ public class Gnome : Walkable
 
             playerBelowMe.playerAboveMe = null;
             canMove = true;
+            balanceUI.HideUI();
+
             IsOnTop = false;
             rb = gameObject.AddComponent<Rigidbody>();
             rb.constraints = RigidbodyConstraints.FreezeRotation;
             myColl.enabled = true;
             playerBelowMe = null;
             transform.parent = null;
+            transform.localRotation = Quaternion.Euler(Vector3.zero);
 
-        } else
+
+        }
+        else
         {
             //discards trechcoat to the ground (makes popupacitve again)
             trenchCoat.TakeOff(this, true);
@@ -333,11 +345,17 @@ public class Gnome : Walkable
 
 
         //rotates
-        if (Input.GetAxis("Horizontal_P" + controllerIndex) == 0 && Input.GetAxis("Vertical_P" + controllerIndex) == 0) {
+        if (canMove)
+        {
+            if (Input.GetAxis("Horizontal_P" + controllerIndex) == 0 && Input.GetAxis("Vertical_P" + controllerIndex) == 0)
+            {
 
-        } else {
-            //rb.rotation = Quaternion.Slerp(rb.rotation, Quaternion.LookRotation(lookRotation), Time.deltaTime * turnSpeed);
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookRotation), Time.deltaTime * turnSpeed);
+            }
+            else
+            {
+                //rb.rotation = Quaternion.Slerp(rb.rotation, Quaternion.LookRotation(lookRotation), Time.deltaTime * turnSpeed);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookRotation), Time.deltaTime * turnSpeed);
+            }
         }
 
         CheckRopePull();
@@ -410,6 +428,14 @@ public class Gnome : Walkable
             {
                 GoToTopOfStack();
                 AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .1f);
+            }
+        }
+
+        if (isOnTop)
+        {
+            transform.localRotation = Quaternion.Euler(0, 0, balanceUI.Val * 20f);
+            if (balanceUI.InBalance(Input.GetAxis("Horizontal_P" + controllerIndex)) == false) {
+                GoAwayFromStack();
             }
         }
 

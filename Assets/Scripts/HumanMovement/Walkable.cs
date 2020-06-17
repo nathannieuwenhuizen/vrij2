@@ -18,6 +18,7 @@ public class Walkable : MonoBehaviour
 
     private Vector3 oldPos;
 
+    [SerializeField]
     protected ParticleSystem walkParticle;
 
     [SerializeField]
@@ -26,7 +27,6 @@ public class Walkable : MonoBehaviour
     public virtual void Start()
     {
         oldPos = transform.position;
-        walkParticle = GetComponent<ParticleSystem>();
         walkSoundInfo.audioS = GetComponent<AudioSource>();
     }
 

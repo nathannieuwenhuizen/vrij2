@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popUpText: Steal
-  isHigherUp: 1
+  isHigherUp: 0
   effectSound: 11
 --- !u!1 &5844594441708190726
 GameObject:
@@ -106,7 +106,7 @@ Transform:
   m_GameObject: {fileID: 8020307337523415623}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.01999998, z: 0}
-  m_LocalScale: {x: 1.1, y: 1.5, z: 0.1}
+  m_LocalScale: {x: 1.79839, y: 2.45235, z: 0.16349}
   m_Children: []
   m_Father: {fileID: 7056715432399148122}
   m_RootOrder: 0
