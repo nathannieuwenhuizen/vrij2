@@ -12,6 +12,7 @@ public class ArtWork : InteractableObject
     [SerializeField]
     private AudioEffect effectSound;
 
+    protected bool goesToHead = false;
 
     public override void Interact(Gnome gnome = null)
     {
@@ -27,7 +28,13 @@ public class ArtWork : InteractableObject
 
             gnome.StolenArtWork.Add(this);
             BaseManager.instance?.UpdateScoreUI();
-            yield return StartCoroutine(AnimateTo(gnome.pulledObject.transform, .5f));
+            if (goesToHead)
+            {
+                yield return StartCoroutine(AnimateTo(gnome.headPivot.transform, 1f));
+            } else
+            {
+                yield return StartCoroutine(AnimateTo(gnome.pulledObject.transform, .5f));
+            }
         }
     }
 
@@ -76,6 +83,7 @@ public class ArtWork : InteractableObject
         {
             SetCollider(true);
         }
+        if (goesToHead) { transform.localRotation = Quaternion.Euler(0, 0, 0); }
     }
 
     public void SetCollider(bool val)

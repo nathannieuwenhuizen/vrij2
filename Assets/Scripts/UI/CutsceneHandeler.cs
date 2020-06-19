@@ -42,20 +42,15 @@ public class CutsceneHandeler : MonoBehaviour
     }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            StartCutscene(Data.introDialogue, cameraFocus);
-        }
-
         if (NextButtonDown())
         {
             skip = true;
         }
     }
-    public void StartCutscene(SpokenLine[] dialogue, Transform cameraPos = null)
+    public void StartCutscene(SpokenLine[] dialogue, Transform cameraPos = null, bool flipCamera = false)
     {
         HideText();
-        StartCoroutine(InDialogue(dialogue, cameraPos));
+        StartCoroutine(InDialogue(dialogue, cameraPos, flipCamera));
     }
 
     public IEnumerator AnimateBlackBars(bool show)
@@ -103,7 +98,7 @@ public class CutsceneHandeler : MonoBehaviour
         }
     }
 
-    public IEnumerator InDialogue(SpokenLine[] dialogue, Transform cameraPos)
+    public IEnumerator InDialogue(SpokenLine[] dialogue, Transform cameraPos, bool flipCamera = false)
     {
         inCutscene = true;
         EnableCameraFollowTargets(false);
@@ -112,6 +107,18 @@ public class CutsceneHandeler : MonoBehaviour
 
         oldPos = Camera.main.transform.position;
         oldRot = Camera.main.transform.rotation;
+
+        if (flipCamera)
+        {
+            MultipleTargetsAverageFollow mf = Camera.main.GetComponent<MultipleTargetsAverageFollow>();
+            Debug.Log("z offset: " + mf.offset.z);
+            float delta = mf.offset.z * 2f;
+            oldPos.z -= delta;
+            mf.offset.z *= -1;
+
+            oldRot = Quaternion.Euler(54f, 180f, oldRot.z);
+        }
+
         if (cameraPos != null)
         {
             yield return StartCoroutine(MoveCamera(cameraPos.position, cameraPos.rotation));

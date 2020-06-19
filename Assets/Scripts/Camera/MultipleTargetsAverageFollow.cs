@@ -2,7 +2,8 @@
 using System.Collections;
 
 public class MultipleTargetsAverageFollow : MonoBehaviour {
-    private Vector3 offset;
+    [HideInInspector]
+    public Vector3 offset;
 
     [SerializeField]
     private float lerpSpeed = 5f;

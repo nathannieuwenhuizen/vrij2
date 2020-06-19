@@ -74,6 +74,8 @@ public class Gnome : Walkable
         set { trenchCoat = value; }
     }
 
+    public bool HasCrown { get; set; } = false;
+
     public List<ArtWork> StolenArtWork
     {
         get { 
@@ -360,8 +362,22 @@ public class Gnome : Walkable
 
         CheckRopePull();
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "DestroyAble" && HasCrown)
+        {
+            if (collision.gameObject.GetComponent<MeshDestroy>() == null)
+            {
+                CameraShake.instance?.Shake(.5f);
 
-    public void OnTriggerEnter(Collider other)
+                MeshDestroy md = collision.gameObject.AddComponent<MeshDestroy>();
+                md.sliced = true;
+                md.DestroyMesh();
+            }
+        }
+    }
+
+        public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "End")
         {

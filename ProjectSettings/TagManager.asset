@@ -6,6 +6,7 @@ TagManager:
   tags:
   - End
   - Button
+  - DestroyAble
   layers:
   - Default
   - TransparentFX

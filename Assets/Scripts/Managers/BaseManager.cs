@@ -43,6 +43,7 @@ public class BaseManager : MonoBehaviour
     [SerializeField]
     protected List<Human> alertedHumans;
 
+    private bool fadingToScene = false;
 
     public void Pause(bool val)
     {
@@ -121,7 +122,7 @@ public class BaseManager : MonoBehaviour
     {
     }
 
-    public virtual void CrownIsStolen()
+    public virtual void CrownIsStolen(Gnome gnome)
     {
     }
     public virtual void End()
@@ -145,12 +146,17 @@ public class BaseManager : MonoBehaviour
 
     public IEnumerator FadeToScene(string sceneName = "MainMenu")
     {
-        yield return StartCoroutine(fadeImage.FadeTo(0, 1, 1f));
-        if (sceneLoader == null)
+        if (!fadingToScene)
         {
-            sceneLoader = GetComponent<SceneLoader>();
+            fadingToScene = true;
+
+            yield return StartCoroutine(fadeImage.FadeTo(0, 1, 1f));
+            if (sceneLoader == null)
+            {
+                sceneLoader = GetComponent<SceneLoader>();
+            }
+            sceneLoader.LoadNewScene(sceneName);
         }
-        sceneLoader.LoadNewScene(sceneName);
     }
 
     [System.Serializable]

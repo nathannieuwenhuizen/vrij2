@@ -10,10 +10,10 @@ public class MeshDestroy : MonoBehaviour
     private Vector2 edgeUV = Vector2.zero;
     private Plane edgePlane = new Plane();
 
-    public int CutCascades = 1;
+    public int CutCascades = 4;
     public float ExplodeForce = 0;
 
-    private bool sliced = false;
+    public bool sliced = false;
     // Start is called before the first frame update
     void Start() 
     {
@@ -30,7 +30,7 @@ public class MeshDestroy : MonoBehaviour
         }
     }
 
-    private void DestroyMesh()
+    public void DestroyMesh()
     {
         var originalMesh = GetComponent<MeshFilter>().mesh;
         originalMesh.RecalculateBounds();

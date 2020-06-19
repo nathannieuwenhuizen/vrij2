@@ -29,6 +29,7 @@ public class Human : Walkable
     public SearchState searchState;
     public PatrolState patrolState;
     public NoticingState noticingState;
+    public AlwaysChaseState alwaysChaseState;
 
     public ThoughtBubble thoughtBubble;
 
@@ -54,6 +55,8 @@ public class Human : Walkable
         chaseState.human = this;
         searchState = new SearchState();
         searchState.human = this;
+        alwaysChaseState = new AlwaysChaseState();
+        alwaysChaseState.human = this;
 
         stateMachine = new FSM(patrolState);
 

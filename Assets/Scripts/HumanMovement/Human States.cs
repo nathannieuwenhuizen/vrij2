@@ -125,6 +125,7 @@ public class ChaseState : IState
 
         human.thoughtBubble.SetSymbol(Thought.alert);
         human.thoughtBubble.FillColor = Color.red;
+        human.thoughtBubble.FillAmount = 1;
 
         GameManager.instance.HumanIsAlerted(human);
     }
@@ -164,6 +165,43 @@ public class ChaseState : IState
         human.movement.StopMovement();
     }
 }
+public class AlwaysChaseState : IState
+{
+    public ILiveStateDelegate OnStateSwitch { get; set; }
+    public Human human;
+    public Vector3 lastSeenPos;
+    public void Start()
+    {
+        human.movement.StopMovement();
+
+        human.spotLight.color = Color.red;
+        human.movement.StartChase(human.foundGnome.transform);
+
+        human.thoughtBubble.SetSymbol(Thought.alert);
+        human.thoughtBubble.FillColor = Color.red;
+        human.thoughtBubble.FillAmount = 1;
+
+        GameManager.instance.HumanIsAlerted(human);
+    }
+
+    public void Run()
+    {
+
+        if (Vector3.Distance(human.transform.position, human.foundGnome.transform.position) < human.gnomeAttackDistance)
+        {
+            human.RetrieveArtWorkFrom(human.foundGnome);
+            AudioManager.instance?.PlaySound(AudioEffect.guard_catches_you, .3f);
+            BaseManager.instance.HumanIsNormal(human);
+            OnStateSwitch(human.patrolState);
+        }
+    }
+
+    public void Exit()
+    {
+        human.movement.StopMovement();
+    }
+}
+
 public class SearchState : IState
 {
     public ILiveStateDelegate OnStateSwitch { get; set; }

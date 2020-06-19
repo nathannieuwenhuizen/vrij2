@@ -6,8 +6,9 @@ public class Crown : ArtWork
 {
     public override void Interact(Gnome gnome = null)
     {
+        goesToHead = true;
         base.Interact(gnome);
-        GameManager.instance.CrownIsStolen();
-        //gameObject.SetActive(false);
+        gnome.HasCrown = true;
+        GameManager.instance.CrownIsStolen(gnome);
     }
-}
+} 

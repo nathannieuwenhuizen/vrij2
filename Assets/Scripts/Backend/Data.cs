@@ -23,4 +23,12 @@ public static class Data
         new SpokenLine("King", "Go and take back my Jewels from the human’s nest! "),
         new SpokenLine("King", "And some extra’s if you’re at it.")
     };
+    public static SpokenLine[] alarmGoesOff = new SpokenLine[] {
+        new SpokenLine("David", "Oh on! The whole museum is alerted!"),
+        new SpokenLine("Ronald", "How do we get out?"),
+        new SpokenLine("David", "Maybe the crown can help us out with it's magical powers?"),
+        new SpokenLine("David", "Like going through walls?"),
+        new SpokenLine("Ronald", "Yeah... likt that is going to happen!"),
+        new SpokenLine("David", "Well, try it!")
+    };
 }
