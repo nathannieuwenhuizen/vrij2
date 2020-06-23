@@ -74,6 +74,8 @@ public class BaseManager : MonoBehaviour
         alertedHumans = new List<Human>();
 
         sceneLoader = GetComponent<SceneLoader>();
+
+        StartCoroutine(fadeImage.FadeTo(1, 0, 1f));
     }
 
     void Update()

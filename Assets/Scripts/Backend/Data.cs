@@ -31,4 +31,13 @@ public static class Data
         new SpokenLine("Ronald", "Yeah... likt that is going to happen!"),
         new SpokenLine("David", "Well, try it!")
     };
+    public static SpokenLine[] endDialogue = new SpokenLine[] {
+        new SpokenLine("King", "My dear subordinates."),
+        new SpokenLine("King", "Thank you so much for retrieving the crown form the human nest!"),
+        new SpokenLine("King", "You're all promoted to..."),
+        new SpokenLine("King", "Executive right hand gnome assistent!"),
+        new SpokenLine("King", "This was one succesful..."),
+        new SpokenLine("King", "GNOME HEIST!"),
+    };
+
 }

@@ -66,7 +66,7 @@ public class ResultManager : MonoBehaviour
             Destroy(gnome.pulledObject);
             Destroy(gnome.gameObject);
         }
-        GetComponent<SceneLoader>().LoadNewScene("MainMenu");
+        GetComponent<SceneLoader>().LoadNewScene("EndScene");
     }
 
     IEnumerator ScoreForOnePlayer(Gnome gnome, ScoreData spawnData)
