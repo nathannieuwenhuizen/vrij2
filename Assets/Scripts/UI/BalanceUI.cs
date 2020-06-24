@@ -53,14 +53,14 @@ public class BalanceUI : MonoBehaviour
     {
         velocity -= input * acceleration;
         velocity += acceleration * Val;
-        Val += velocity;
+        Val += velocity * 0.1f;
 
         if (Mathf.Abs(Val) > 1f)
         {
             return false;
         }
         //make it harder
-        acceleration += 0.0001f * Time.deltaTime;
+        acceleration += 0.0001f; 
         return true;
     }
 

@@ -344,6 +344,14 @@ public class Gnome : Walkable
             }
         }
 
+        if (isOnTop)
+        {
+            transform.localRotation = Quaternion.Euler(0, 0, balanceUI.Val * 20f);
+            if (balanceUI.InBalance(Input.GetAxis("Horizontal_P" + controllerIndex)) == false)
+            {
+                GoAwayFromStack();
+            }
+        }
 
 
         //rotates
@@ -446,15 +454,6 @@ public class Gnome : Walkable
                 AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .1f);
             }
         }
-
-        if (isOnTop)
-        {
-            transform.localRotation = Quaternion.Euler(0, 0, balanceUI.Val * 20f);
-            if (balanceUI.InBalance(Input.GetAxis("Horizontal_P" + controllerIndex)) == false) {
-                GoAwayFromStack();
-            }
-        }
-
 
         //head animation
         if (rb != null)
