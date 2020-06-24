@@ -490,6 +490,7 @@ MonoBehaviour:
   speed: 1
   fastSpeed: 5
   fadeImage: {fileID: 1906671246}
+  endPoint: {fileID: 1011571832}
 --- !u!114 &659635602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -572,7 +573,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Shiva Bindraman
 
-    Eric ....
+    Eric Schuster
 
 
 
@@ -688,7 +689,7 @@ MonoBehaviour:
 
 
 
-    Development
+    Programming
 
 
     Character Artist

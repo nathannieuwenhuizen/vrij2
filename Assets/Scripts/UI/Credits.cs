@@ -20,6 +20,9 @@ public class Credits : MonoBehaviour
     private bool fadingToScene;
     private SceneLoader sceneLoader;
 
+    [SerializeField]
+    private RectTransform endPoint;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,16 +37,18 @@ public class Credits : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (temp.y > rt.sizeDelta.y)
+        if (endPoint.position.y > (float)Screen.height / 2f)
         {
             if (fadingToScene == false)
                 StartCoroutine(FadeToScene());
         } else
         {
             temp = rt.position;
-            temp.y += Input.anyKey ? fastSpeed : speed;
+            temp.y += (Input.anyKey ? fastSpeed : speed) * (Screen.height / 400f);
             rt.position = temp;
         }
+
+        Debug.Log("pos: " + (endPoint.position.y) + " | end: " + Screen.height / 3);
     }
 
     public IEnumerator FadeToScene(string sceneName = "MainMenu")
