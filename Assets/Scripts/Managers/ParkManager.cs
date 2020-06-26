@@ -17,13 +17,17 @@ public class ParkManager : BaseManager
     [SerializeField]
     private TutorialUI tutorialUI;
 
+    [SerializeField]
+    private AudioSource fontainSource;
+
     public override void Start()
     {
         base.Start();
 
         instance = this;
         musicVolume = .1f;
-        musicPauseVolume = .05f; 
+        musicPauseVolume = .05f;
+        fontainSource.volume = .5f * Settings.SFX;
         AudioManager.instance?.Playmusic(Music.park, musicVolume);
 
         StartCoroutine(IntroCutscene());

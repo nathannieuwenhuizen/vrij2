@@ -11,14 +11,6 @@ public class CameraShake : MonoBehaviour
         instance = this;
     }
 
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            //Shake(1f);
-        }
-    }
-
     public void Shake(float duration, float intensity = 1f, float frequencyInSeconds = 5f)
     {
         StopAllCoroutines();
