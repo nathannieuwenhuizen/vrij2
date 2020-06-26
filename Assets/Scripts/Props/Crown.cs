@@ -10,5 +10,6 @@ public class Crown : ArtWork
         base.Interact(gnome);
         gnome.HasCrown = true;
         GameManager.instance.CrownIsStolen(gnome);
+        AudioManager.instance?.PlaySound(AudioEffect.crown_steal, .5f);
     }
 } 
