@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.43795204, g: 0.48590654, b: 0.56618404, a: 1}
+  m_IndirectSpecularColor: {r: 0.43795165, g: 0.485906, b: 0.5661832, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -19948,7 +19948,7 @@ PrefabInstance:
     - target: {fileID: 6169544798691992305, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.449992
+      value: -75.64999
       objectReference: {fileID: 0}
     - target: {fileID: 6169544798691992305, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
@@ -19958,7 +19958,7 @@ PrefabInstance:
     - target: {fileID: 6169544798691992305, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -18.439995
+      value: 137.16
       objectReference: {fileID: 0}
     - target: {fileID: 6169544798691992305, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
@@ -22396,7 +22396,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 4e-45}
+  m_BoundingSphereOverride: {x: 7.9e-43, y: 7.1e-44, z: 0, w: 0.0000000016702826}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -58575,7 +58575,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1964240788}
   - component: {fileID: 1964240790}
-  - component: {fileID: 1964240789}
   m_Layer: 0
   m_Name: CrownStolenShot
   m_TagString: Untagged
@@ -58597,14 +58596,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -4.328, y: -96.133, z: 0}
---- !u!81 &1964240789
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1964240787}
-  m_Enabled: 1
 --- !u!20 &1964240790
 Camera:
   m_ObjectHideFlags: 0
@@ -63283,9 +63274,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 698393693978890757, guid: ba9260d5470d9ab4aaa78a88c9da0991,
         type: 3}
+      propertyPath: soundEffectInstances.Array.size
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 698393693978890757, guid: ba9260d5470d9ab4aaa78a88c9da0991,
+        type: 3}
+      propertyPath: soundEffectInstances.Array.data[10].clip.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 698393693978890757, guid: ba9260d5470d9ab4aaa78a88c9da0991,
+        type: 3}
       propertyPath: musicClips.Array.data[1].clip
       value: 
       objectReference: {fileID: 8300000, guid: 138f5524a72b347498e185ee011c084f, type: 3}
+    - target: {fileID: 698393693978890757, guid: ba9260d5470d9ab4aaa78a88c9da0991,
+        type: 3}
+      propertyPath: soundEffectInstances.Array.data[10].audioEffect
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 698393693978890757, guid: ba9260d5470d9ab4aaa78a88c9da0991,
+        type: 3}
+      propertyPath: soundEffectInstances.Array.data[10].clip.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 9340c5f85b7c74b4b9b2d750d2f386bb, type: 3}
     - target: {fileID: 698393693978890758, guid: ba9260d5470d9ab4aaa78a88c9da0991,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -63447,7 +63458,7 @@ PrefabInstance:
     - target: {fileID: 4859907474548332471, guid: 8a01c31f3525e8b48b7dcfc7f2ba4c7a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.3
+      value: -74.5
       objectReference: {fileID: 0}
     - target: {fileID: 4859907474548332471, guid: 8a01c31f3525e8b48b7dcfc7f2ba4c7a,
         type: 3}
@@ -63457,7 +63468,7 @@ PrefabInstance:
     - target: {fileID: 4859907474548332471, guid: 8a01c31f3525e8b48b7dcfc7f2ba4c7a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -25.9
+      value: 129.7
       objectReference: {fileID: 0}
     - target: {fileID: 4859907474548332471, guid: 8a01c31f3525e8b48b7dcfc7f2ba4c7a,
         type: 3}
@@ -63695,7 +63706,7 @@ PrefabInstance:
     - target: {fileID: 6169544798691992305, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.6199903
+      value: -72.819984
       objectReference: {fileID: 0}
     - target: {fileID: 6169544798691992305, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
@@ -63705,7 +63716,7 @@ PrefabInstance:
     - target: {fileID: 6169544798691992305, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -18.700005
+      value: 136.9
       objectReference: {fileID: 0}
     - target: {fileID: 6169544798691992305, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
