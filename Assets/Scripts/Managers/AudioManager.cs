@@ -16,7 +16,8 @@ public enum AudioEffect
     painting_steal,
     statue_steal,
     trenchCoat_wear,
-    crown_steal
+    crown_steal,
+    destruction
 }
 public enum Music
 {

@@ -389,7 +389,7 @@ public class Gnome : Walkable
             if (collision.gameObject.GetComponent<MeshDestroy>() == null)
             {
                 CameraShake.instance?.Shake(.5f);
-
+                AudioManager.instance?.PlaySound(AudioEffect.destruction, .5f);
                 MeshDestroy md = collision.gameObject.AddComponent<MeshDestroy>();
                 md.sliced = true;
                 md.DestroyMesh();
