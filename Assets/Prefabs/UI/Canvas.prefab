@@ -461,9 +461,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 010a1cd83fe839f49bdb5a876f8e5ca0, type: 3}
   - {fileID: 8300000, guid: 58167caca4ad8b04ea184c7fb4ad34a4, type: 3}
   gnomeSounds:
-  - {fileID: 8300000, guid: d5026860b8ef4e64da614d9c1385e954, type: 3}
-  - {fileID: 8300000, guid: edcaaa8a777808843b2b694f3a2959b8, type: 3}
-  - {fileID: 8300000, guid: 7118ffccbde52114491edf28ee63b1e2, type: 3}
+  - {fileID: 8300000, guid: 4a4d8e88d81ade44b8b2a0861d00dc93, type: 3}
+  - {fileID: 8300000, guid: ff112427a6aa17d47ac2c404d59f5a87, type: 3}
+  - {fileID: 8300000, guid: ac5ba3f700278044b8c8b98755603f53, type: 3}
+  - {fileID: 8300000, guid: 1c105e66aee1b604897d9944ecbce5c0, type: 3}
+  - {fileID: 8300000, guid: c34c77f881882fa41af5c2effad32b3e, type: 3}
 --- !u!82 &6875925249757463372
 AudioSource:
   m_ObjectHideFlags: 0
