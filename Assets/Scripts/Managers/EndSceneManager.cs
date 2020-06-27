@@ -7,10 +7,8 @@ public class EndSceneManager : BaseManager
 
     public CutsceneHandeler cutSceneHandeler;
 
-
     [SerializeField]
     private Transform endShot;
-
 
     public override void Start()
     {
@@ -19,7 +17,7 @@ public class EndSceneManager : BaseManager
         instance = this;
         musicVolume = .1f;
         musicPauseVolume = .05f;
-        AudioManager.instance?.Playmusic(Music.park, musicVolume);
+        AudioManager.instance?.Playmusic(Music.king, musicVolume);
 
         StartCoroutine(EndCutscene());
 
@@ -38,7 +36,6 @@ public class EndSceneManager : BaseManager
     }
     public override void End()
     {
-        AudioManager.instance?.PlaySound(AudioEffect.congrats, 1f);
         StartCoroutine(FadeToScene("Credits"));
     }
 

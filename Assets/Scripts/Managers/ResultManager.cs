@@ -55,7 +55,7 @@ public class ResultManager : MonoBehaviour
         yield return StartCoroutine(TotalScore(0, spawnDataPlayer1.score + spawnDataPlayer2.score));
         nextButton.SetActive(true);
     }
-    public void GoToMenu()
+    public void GoToEndScene()
     {
         foreach(Gnome gnome in gnomes)
         {

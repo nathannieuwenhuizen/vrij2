@@ -28,7 +28,7 @@ public class ParkManager : BaseManager
         musicVolume = .1f;
         musicPauseVolume = .05f;
         fontainSource.volume = .5f * Settings.SFX;
-        AudioManager.instance?.Playmusic(Music.park, musicVolume);
+        AudioManager.instance?.Playmusic(Music.king, musicVolume);
 
         StartCoroutine(IntroCutscene());
 
@@ -44,11 +44,12 @@ public class ParkManager : BaseManager
             yield return new WaitForFixedUpdate();
         }
         State = GameState.idle;
+        AudioManager.instance?.FadeMusic(Music.park, 1f);
         tutorialUI.ShowMovement();
     }
     public override void End()
     {
-        AudioManager.instance?.PlaySound(AudioEffect.congrats, 1f);
+        AudioManager.instance?.PlaySound(AudioEffect.congrats, .3f);
         StartCoroutine(FadeToScene("Museum"));
     }
 

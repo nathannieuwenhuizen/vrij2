@@ -23,7 +23,8 @@ public enum Music
     museum,
     guardSeesYou,
     menu,
-    park
+    park,
+    king
 }
 
 [RequireComponent(typeof(AudioSource))]

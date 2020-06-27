@@ -34,6 +34,14 @@ public class CutsceneHandeler : MonoBehaviour
 
     public bool inCutscene = false;
 
+    [SerializeField]
+    private AudioSource audioS;
+    [SerializeField]
+    private AudioClip[] kingSounds;
+    [SerializeField]
+    private AudioClip[] gnomeSounds;
+
+
     // Use this for initialization
     void Start()
     {
@@ -129,6 +137,11 @@ public class CutsceneHandeler : MonoBehaviour
         {
             fromText.text = line.Name;
             nextLine = false;
+
+            audioS.clip = line.clipIndex == -1 ? gnomeSounds[Mathf.FloorToInt(Random.Range(0, gnomeSounds.Length))] : kingSounds[line.clipIndex];
+            audioS.volume = (line.clipIndex == -1 ?  0.3f : 1f) * Settings.SFX;
+            audioS.Play();
+
             yield return StartCoroutine(TypeText(line.Line));
 
             if (Data.ControllerConnected())
@@ -188,8 +201,8 @@ public class CutsceneHandeler : MonoBehaviour
             dialogueText.text += letter;
             if (!skip)
             {
-                yield return new WaitForFixedUpdate();
-                //yield return new WaitForSeconds(letterPause);
+                //yield return new WaitForFixedUpdate();
+                yield return new WaitForSeconds(letterPause);
             }
         }
     }
@@ -199,10 +212,11 @@ public struct SpokenLine
 {
     public string Line;
     public string Name;
-
-    public SpokenLine(string name, string line)
+    public int clipIndex;
+    public SpokenLine(string name, string line, int clipIndex = -1)
     {
         this.Line = line;
         this.Name = name;
+        this.clipIndex = clipIndex;
     }
 }
