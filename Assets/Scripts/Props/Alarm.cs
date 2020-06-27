@@ -15,7 +15,7 @@ public class Alarm : MonoBehaviour
 
     private Vector3 rotation = new Vector3(0, 0, 5f);
 
-    private float volume = .5f;
+    private float volume = .2f;
     private float alarmDuration = 10f;
 
     void Start()
