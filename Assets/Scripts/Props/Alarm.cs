@@ -6,7 +6,6 @@ using UnityEngine;
 public class Alarm : MonoBehaviour
 {
 
-
     [SerializeField]
     private float alarmRange = 30f;
 

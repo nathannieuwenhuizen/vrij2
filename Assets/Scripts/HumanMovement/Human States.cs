@@ -61,6 +61,8 @@ public class NoticingState : IState
 
     public void Start()
     {
+        human.Say(voiceType.huh);
+
         human.anim.SetLayerWeight(1, 1);
         noticingPrecentage = 0;
 
@@ -119,6 +121,7 @@ public class ChaseState : IState
     public Vector3 lastSeenPos;
     public void Start()
     {
+        human.Say(voiceType.hey);
         human.anim.SetBool("IsWalking", true);
         human.anim.SetBool("IsChasing", true);
         human.movement.StopMovement();
@@ -217,6 +220,8 @@ public class SearchState : IState
     public Vector3 searchPos; 
     public void Start()
     {
+        human.Say(voiceType.huh);
+
         human.anim.SetBool("IsWalking", true);
         human.thoughtBubble.FillColor = Color.yellow;
 
@@ -224,12 +229,13 @@ public class SearchState : IState
         //Debug.Log("search pos: " + searchPos);
         //Debug.Log("my pos: " + human.transform.position);
         human.movement.Search(searchPos, 60, 5f);//starts searching
-    }
+    } 
 
     public void Run()
     {
         if (!human.movement.IsMoving)
         {
+            human.Say(voiceType.nothing);
             GameManager.instance.HumanIsNormal(human);
             OnStateSwitch(human.patrolState);
         }

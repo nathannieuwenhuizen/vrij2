@@ -506,7 +506,7 @@ public class Gnome : Walkable
             Debug.Log("interact" + controllerIndex);
             if (hoverObject != null)
             {
-                AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .1f);
+                //AudioManager.instance?.PlaySound(AudioEffect.normal_gibberish, .1f);
                 hoverObject.Interact(this);
             }
         }

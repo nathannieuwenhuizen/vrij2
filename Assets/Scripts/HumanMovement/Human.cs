@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum voiceType
+{
+    huh,
+    hey,
+    nothing
+}
 
 public class Human : Walkable
 {
@@ -37,6 +43,12 @@ public class Human : Walkable
 
     public Animator anim;
 
+    [SerializeField]
+    private AudioSource voice;
+
+    public AudioClip[] huh_Clips;
+    public AudioClip[] hey_Clips;
+    public AudioClip[] nothing_Clips;
 
     [HideInInspector]
     public Gnome foundGnome;
@@ -64,7 +76,26 @@ public class Human : Walkable
 
         stateMachine = new FSM(patrolState);
 
-     }
+    }
+
+    public void Say(voiceType type)
+    {
+        if (voice.isPlaying) return;
+        switch (type)
+        {
+            case voiceType.huh:
+                voice.clip = huh_Clips[ Mathf.FloorToInt(Random.Range(0, huh_Clips.Length))];
+                break;
+            case voiceType.hey:
+                voice.clip = hey_Clips[Mathf.FloorToInt(Random.Range(0, hey_Clips.Length))];
+                break;
+            case voiceType.nothing:
+                voice.clip = nothing_Clips[Mathf.FloorToInt(Random.Range(0, nothing_Clips.Length))];
+                break;
+        }
+        voice.volume = 1 * Settings.SFX;
+        voice.Play();
+    }
 
     public void RetrieveArtWorkFrom(Gnome gnome)
     {

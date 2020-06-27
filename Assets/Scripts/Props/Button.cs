@@ -19,7 +19,7 @@ public class Button : InteractableObject
         lr = GetComponent<LineRenderer>();
         lr.SetPosition(1, lineTarget.transform.position - transform.position);
 
-    }
+    } 
     public override void Interact(Gnome gnome = null)
     {
         base.Interact(gnome);
@@ -27,5 +27,11 @@ public class Button : InteractableObject
         {
             pushEvent.Invoke();
         }
+        StartCoroutine(AutoInteract());
+    }
+    IEnumerator AutoInteract()
+    {
+        yield return new WaitForSeconds(5f);
+        popupIsActive = true;
     }
 }
