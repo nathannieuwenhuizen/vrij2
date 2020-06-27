@@ -94,6 +94,7 @@ public class BaseManager : MonoBehaviour
         alertedHumans.Add(human);
         if (alertedHumans.Count == 1 && state != GameState.escape)
         {
+            AudioManager.instance?.PlaySound(AudioEffect.guard_catches_you, .1f);
             State = GameState.alert;
         }
     }

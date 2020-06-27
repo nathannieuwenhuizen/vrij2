@@ -35,6 +35,8 @@ public class Human : Walkable
 
     public float gnomeAttackDistance = 2f;
 
+    public Animator anim;
+
 
     [HideInInspector]
     public Gnome foundGnome;
@@ -44,6 +46,8 @@ public class Human : Walkable
         base.Start();
 
         movement = GetComponent<HumanMovement>();
+        movement.anim = anim;
+
         gnomes = FindObjectsOfType<Gnome>();
 
 
@@ -59,7 +63,6 @@ public class Human : Walkable
         alwaysChaseState.human = this;
 
         stateMachine = new FSM(patrolState);
-
 
      }
 

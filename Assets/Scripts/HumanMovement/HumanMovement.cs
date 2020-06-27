@@ -8,7 +8,7 @@ public class HumanMovement : MonoBehaviour
 {
 
     [SerializeField]
-    private Transform[] wayPoints;
+    public Transform[] wayPoints;
 
     private Vector3 startOrientation;
     private Vector3 startPosition;
@@ -23,6 +23,9 @@ public class HumanMovement : MonoBehaviour
     [SerializeField]
     private float randomOffset = 0.1f;
 
+    [HideInInspector]
+    public Animator anim;
+
     private NavMeshAgent agent;
     public void Awake()
     {
@@ -35,12 +38,15 @@ public class HumanMovement : MonoBehaviour
 
     public void StartPatrolling()
     {
+        anim.SetBool("IsWalking", true);
+
         if (wayPoints.Length > 1)
         {
             StartCoroutine(WalkLoop(transformToPositions(wayPoints), invert, ClosestWayPointIndex()));
         } else
         {
             StartCoroutine(BackToOriginalPosition());
+            Debug.Log("Back to OriginalPos");
         }
     }
 
@@ -55,7 +61,7 @@ public class HumanMovement : MonoBehaviour
             yield return StartCoroutine(GoTo(wayPoints[0].position));
         }
         yield return StartCoroutine(Orienting(transform.position + startOrientation));
-
+        anim.SetBool("IsWalking", false);
     }
 
     public int ClosestWayPointIndex()
@@ -81,6 +87,8 @@ public class HumanMovement : MonoBehaviour
 
     public void StopMovement()
     {
+        anim.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 0));
+
         StopAllCoroutines();
     }
 
@@ -169,6 +177,7 @@ public class HumanMovement : MonoBehaviour
     }
     public IEnumerator LookingAround(float angle, float searchDuration)
     {
+        anim.SetBool("IsSearching", true);
         agent.enabled = false;
         float startRotation = transform.rotation.eulerAngles.y;
         float index = 0;
@@ -176,6 +185,7 @@ public class HumanMovement : MonoBehaviour
         {
             index += Time.deltaTime;
             transform.rotation = Quaternion.Euler( new Vector3(0, startRotation + (angle / 2f + Mathf.Sin(index /searchDuration *Mathf.PI * 2) * angle), 0));
+            anim.transform.localRotation = Quaternion.Euler(new Vector3(0, -(angle / 2f + Mathf.Sin(index / searchDuration * Mathf.PI * 2) * angle), 0));
             yield return new WaitForFixedUpdate();
 
         }

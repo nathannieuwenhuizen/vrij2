@@ -61,6 +61,7 @@ public class NoticingState : IState
 
     public void Start()
     {
+        human.anim.SetLayerWeight(1, 1);
         noticingPrecentage = 0;
 
         human.thoughtBubble.ShowUI();
@@ -105,6 +106,7 @@ public class NoticingState : IState
     }
     public void Exit()
     {
+        human.anim.SetLayerWeight(1, 0);
         human.thoughtBubble.FillAmount = 1f;
         human.movement.StopMovement();
     }
@@ -117,9 +119,10 @@ public class ChaseState : IState
     public Vector3 lastSeenPos;
     public void Start()
     {
+        human.anim.SetBool("IsWalking", true);
+        human.anim.SetBool("IsChasing", true);
         human.movement.StopMovement();
 
-        AudioManager.instance?.PlaySound(AudioEffect.guard_catches_you, .1f);
         human.spotLight.color = Color.red;
         human.movement.StartChase(human.foundGnome.transform);
 
@@ -162,6 +165,7 @@ public class ChaseState : IState
 
     public void Exit()
     {
+        human.anim.SetBool("IsChasing", false);
         human.movement.StopMovement();
     }
 }
@@ -172,6 +176,9 @@ public class AlwaysChaseState : IState
     public Vector3 lastSeenPos;
     public void Start()
     {
+        human.anim.SetBool("IsWalking", true);
+        human.anim.SetBool("IsChasing", true);
+
         human.movement.StopMovement();
 
         human.spotLight.color = Color.red;
@@ -198,6 +205,7 @@ public class AlwaysChaseState : IState
 
     public void Exit()
     {
+        human.anim.SetBool("IsChasing", false);
         human.movement.StopMovement();
     }
 }
@@ -206,15 +214,16 @@ public class SearchState : IState
 {
     public ILiveStateDelegate OnStateSwitch { get; set; }
     public Human human;
-    public Vector3 searchPos;
+    public Vector3 searchPos; 
     public void Start()
     {
+        human.anim.SetBool("IsWalking", true);
         human.thoughtBubble.FillColor = Color.yellow;
 
         human.spotLight.color = Color.yellow;
         //Debug.Log("search pos: " + searchPos);
         //Debug.Log("my pos: " + human.transform.position);
-        human.movement.Search(searchPos, 90, 5f);//starts searching
+        human.movement.Search(searchPos, 60, 5f);//starts searching
     }
 
     public void Run()
@@ -239,6 +248,7 @@ public class SearchState : IState
 
     public void Exit()
     {
+        human.anim.SetBool("IsSearching", false);
         human.movement.StopMovement();
     }
 }
