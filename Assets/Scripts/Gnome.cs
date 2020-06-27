@@ -68,6 +68,9 @@ public class Gnome : Walkable
     public Rigidbody pulledObject;
     private float maxDistance = 5f;
 
+    [SerializeField]
+    private Animator anim;
+
     public TrenchCoat TrenchCoat
     {
         get { return trenchCoat; }
@@ -342,6 +345,11 @@ public class Gnome : Walkable
             {
                 rb.velocity = new Vector3(lookRotation.x * stackedSpeed, rb.velocity.y, lookRotation.z * stackedSpeed);
             }
+            anim.SetFloat("Velocity", rb.velocity.magnitude);
+        }
+        else
+        {
+            anim.SetFloat("Velocity", 0);
         }
 
         if (isOnTop)

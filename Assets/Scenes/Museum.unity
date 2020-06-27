@@ -19933,12 +19933,7 @@ PrefabInstance:
     - target: {fileID: 6169544798691992302, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
       propertyPath: controllerIndex
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6169544798691992302, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
-        type: 3}
-      propertyPath: pulledObject
-      value: 
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6169544798691992303, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
@@ -20071,6 +20066,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 62cede7671be6da42ae962d6e11d8a4d, type: 3}
+--- !u!95 &675141620 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 79479134422917685, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
+    type: 3}
+  m_PrefabInstance: {fileID: 6169544800651658147}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &676026829 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4966683413559519075, guid: 3e5a4772ceeb9ce468b24dec4e905be3,
@@ -63683,9 +63684,19 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 349565030667625507, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2764150594440084504, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3025843132259486284, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4381533276676335414, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
@@ -63698,6 +63709,11 @@ PrefabInstance:
       propertyPath: headPivot
       value: 
       objectReference: {fileID: 297431403}
+    - target: {fileID: 6169544798691992302, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
+        type: 3}
+      propertyPath: anim
+      value: 
+      objectReference: {fileID: 675141620}
     - target: {fileID: 6169544798691992303, guid: 30b461c12ffefa24cb1e79e88f9d7a0d,
         type: 3}
       propertyPath: m_Name
