@@ -89,6 +89,10 @@ public class Gnome : Walkable
         }
     }
 
+    private void Awake()
+    {
+        anim.SetFloat("Offset", Random.Range(0.0f, 1.0f));
+    }
     public override void Start()
     {
         base.Start();
