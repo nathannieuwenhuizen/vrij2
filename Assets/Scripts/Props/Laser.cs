@@ -24,9 +24,17 @@ public class Laser : MonoBehaviour
     private bool reverse = false;
     private bool isOn = true;
 
+    [SerializeField]
+    private AudioSource audioS;
+
     void Start()
     {
         lr = GetComponent<LineRenderer>();
+
+        if (audioS != null)
+        {
+            audioS.volume = 1f * Settings.SFX;
+        }
     }
 
     public Gnome RaycastGnome()
