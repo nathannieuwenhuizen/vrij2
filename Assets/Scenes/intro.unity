@@ -747,7 +747,7 @@ Transform:
   - {fileID: 1199512534}
   - {fileID: 1713597448}
   m_Father: {fileID: 406830789}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &108257787
 PrefabInstance:
@@ -6990,11 +6990,11 @@ Transform:
   m_LocalPosition: {x: -95.87482, y: 5.3945065, z: 88.84526}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1517341656}
   - {fileID: 105458789}
   - {fileID: 1887249919}
   - {fileID: 1070373241}
   - {fileID: 1691359388}
-  - {fileID: 1517341656}
   - {fileID: 1341503046}
   - {fileID: 14884724}
   m_Father: {fileID: 0}
@@ -10839,7 +10839,7 @@ Transform:
   - {fileID: 606496724}
   - {fileID: 1441717483}
   m_Father: {fileID: 406830789}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1091493617
 PrefabInstance:
@@ -11968,7 +11968,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -15105,7 +15105,7 @@ Transform:
   - {fileID: 940573946}
   - {fileID: 19937202}
   m_Father: {fileID: 406830789}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1709209402 stripped
 MonoBehaviour:
@@ -16307,7 +16307,7 @@ Transform:
   - {fileID: 2112402641}
   - {fileID: 938375131}
   m_Father: {fileID: 406830789}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1890723600 stripped
 Transform:
@@ -17513,6 +17513,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 406830789}
     m_Modifications:
+    - target: {fileID: 512931688557386842, guid: e7117885b29c249149a2a8ac7d895e8a,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1215372780128374047, guid: e7117885b29c249149a2a8ac7d895e8a,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -17606,7 +17611,7 @@ PrefabInstance:
     - target: {fileID: 6334701035830948765, guid: e7117885b29c249149a2a8ac7d895e8a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6334701035830948765, guid: e7117885b29c249149a2a8ac7d895e8a,
         type: 3}
