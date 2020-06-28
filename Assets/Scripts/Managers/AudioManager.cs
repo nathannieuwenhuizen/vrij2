@@ -38,6 +38,9 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     private List<MusicInstance> musicClips;
 
+    [SerializeField]
+    private musicLayerInstance musicLayerInstance;
+
     [HideInInspector]
     public AudioSource musicSource;
     private bool musicIsFading = false;
@@ -50,6 +53,8 @@ public class AudioManager : MonoBehaviour
         musicSource.loop = true;
 
         InitialiseAudioSources();
+
+        musicLayerInstance.SetupAudioSources(gameObject);
     }
 
     public void InitialiseAudioSources()
@@ -151,6 +156,17 @@ public class AudioManager : MonoBehaviour
         }
         musicSource.volume = end;
     }
+
+    public void ChangeMusicLayers(float[] values)
+    {
+        StopAllCoroutines();
+        for (int i = 0 ; i < musicLayerInstance.layers.Count; i++) {
+            if (musicLayerInstance.layers[i].volume != values[i])
+            {
+                StartCoroutine(musicLayerInstance.ChangeVolume(musicLayerInstance.layers[i], musicLayerInstance.layers[i].volume, values[i] * .3f * Settings.Music));
+            }
+        }
+    }
 }
 
 [System.Serializable]
@@ -182,4 +198,40 @@ public class MusicInstance
 {
     public Music music;
     public AudioClip clip;
+}
+
+[System.Serializable]
+public class musicLayerInstance {
+    public AudioClip[] clips;
+    [HideInInspector]
+    public List<AudioSource> layers;
+    private float fadeDuration = 5f;
+
+    public void SetupAudioSources(GameObject parent)
+    {
+        layers = new List<AudioSource>();
+        foreach(AudioClip clip in clips)
+        {
+            AudioSource newSource = parent.AddComponent<AudioSource>();
+            newSource.loop = true;
+            newSource.clip = clip;
+            newSource.volume = 0;
+            newSource.Play();
+            this.layers.Add(newSource);
+        }
+    }
+
+    public IEnumerator ChangeVolume(AudioSource audioS, float begin, float end)
+    {
+        float index = 0;
+
+        while (index < fadeDuration)
+        {
+            index += Time.deltaTime;
+            audioS.volume = Mathf.Lerp(begin, end, index / fadeDuration);
+            yield return new WaitForFixedUpdate();
+        }
+        audioS.volume = end;
+    }
+
 }
