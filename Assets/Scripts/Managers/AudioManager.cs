@@ -17,7 +17,8 @@ public enum AudioEffect
     statue_steal,
     trenchCoat_wear,
     crown_steal,
-    destruction
+    destruction,
+    doorOpen
 }
 public enum Music
 {
@@ -72,7 +73,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlaySound(AudioEffect audioEffect, float volume)
+    public void PlaySound(AudioEffect audioEffect, float volume, float pitch = 1f)
     {
         SFXInstance selectedAudio = soundEffectInstances.Find(x => x.audioEffect == audioEffect);
         if (selectedAudio == null) return;
@@ -80,6 +81,7 @@ public class AudioManager : MonoBehaviour
         selectedAudio.audioS.spatialBlend = 0;
         selectedAudio.audioS.clip = selectedAudio.getClip;
         selectedAudio.audioS.volume = volume * Settings.SFX;
+        selectedAudio.audioS.pitch = pitch;
         selectedAudio.audioS.Play();
     }
 
