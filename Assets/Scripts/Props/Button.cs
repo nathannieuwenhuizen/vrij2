@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(LineRenderer))]
-public class Button : InteractableObject
+public class WallButton : InteractableObject
 {
     [SerializeField]
     private UnityEvent pushEvent;
