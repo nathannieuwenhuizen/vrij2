@@ -213,7 +213,6 @@ public class CutsceneHandeler : MonoBehaviour
         float alphaAmplitude = .2f;
         while (nextButton_Keyboard.IsActive())
         {
-            Debug.Log(AlphaNextButton);
             index = Mathf.Min(1, index + Time.deltaTime);
             sinIndex += Time.deltaTime * 3;
             AlphaNextButton = index - alphaAmplitude + Mathf.Sin(sinIndex) * alphaAmplitude;
