@@ -185,7 +185,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 5}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -271,6 +271,7 @@ MonoBehaviour:
   maxLaserWidth: 0.7
   button: {fileID: 0}
   reverse: 0
+  audioS: {fileID: 0}
 --- !u!1001 &3289519072311028290
 PrefabInstance:
   m_ObjectHideFlags: 0
