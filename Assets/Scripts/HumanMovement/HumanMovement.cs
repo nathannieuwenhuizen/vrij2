@@ -46,7 +46,7 @@ public class HumanMovement : MonoBehaviour
         } else
         {
             StartCoroutine(BackToOriginalPosition());
-            Debug.Log("Back to OriginalPos");
+            //Debug.Log("Back to OriginalPos");
         }
     }
 

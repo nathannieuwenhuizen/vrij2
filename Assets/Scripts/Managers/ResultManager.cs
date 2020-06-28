@@ -24,6 +24,7 @@ public class ResultManager : MonoBehaviour
     {
         gnomes = FindObjectsOfType<Gnome>();
 
+        AudioManager.instance?.Playmusic(Music.park, .5f);
 
         nextButton.SetActive(false);
         SetUpGnome(gnomes[0], spawnDataPlayer1);
@@ -53,10 +54,13 @@ public class ResultManager : MonoBehaviour
         yield return StartCoroutine(ScoreForOnePlayer(gnomes[0], spawnDataPlayer1));
         yield return StartCoroutine(ScoreForOnePlayer(gnomes[1], spawnDataPlayer2));
         yield return StartCoroutine(TotalScore(0, spawnDataPlayer1.score + spawnDataPlayer2.score));
+        AudioManager.instance?.PlaySound(AudioEffect.congrats, .5f);
+
         nextButton.SetActive(true);
     }
     public void GoToEndScene()
     {
+        Debug.Log("Go to end scene...");
         foreach(Gnome gnome in gnomes)
         {
             foreach(ArtWork art in gnome.StolenArtWork)
@@ -73,6 +77,8 @@ public class ResultManager : MonoBehaviour
     {
         foreach (ArtWork artwork in gnome.StolenArtWork)
         {
+            AudioManager.instance?.PlaySound(AudioEffect.statue_steal, .1f);
+
             artwork.gameObject.SetActive(true);
             spawnData.score++;
 
@@ -85,8 +91,10 @@ public class ResultManager : MonoBehaviour
         int totalScore = 0;
         float index = 0;
         float showTime = 2f;
+        AudioManager.instance?.PlaySound(AudioEffect.painting_steal, .2f);
         while (index < showTime)
         {
+
             index += Time.deltaTime;
             totalScore = Mathf.RoundToInt(Mathf.Lerp(begin, end, showCurve.Evaluate(index / showTime)));
             totalText.text = totalScore + "";

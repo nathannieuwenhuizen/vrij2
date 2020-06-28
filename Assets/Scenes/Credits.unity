@@ -723,7 +723,7 @@ PrefabInstance:
         type: 3}
       propertyPath: musicClips.Array.data[1].clip
       value: 
-      objectReference: {fileID: 8300000, guid: 138f5524a72b347498e185ee011c084f, type: 3}
+      objectReference: {fileID: 8300000, guid: 075c13d8733e82244918ba8c67b93bd5, type: 3}
     - target: {fileID: 698393693978890758, guid: ba9260d5470d9ab4aaa78a88c9da0991,
         type: 3}
       propertyPath: m_LocalPosition.x
