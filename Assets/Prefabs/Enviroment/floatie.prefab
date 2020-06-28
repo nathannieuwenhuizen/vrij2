@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7859852491723889245}
   m_Layer: 0
   m_Name: Cylinder
-  m_TagString: Untagged
+  m_TagString: DestroyAble
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 6553554942092822324}
   - component: {fileID: 2858063655268646146}
   - component: {fileID: 8400735764542259707}
+  - component: {fileID: 328088996028173069}
   m_Layer: 0
   m_Name: floatie
   m_TagString: DestroyAble
@@ -119,9 +120,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7829999053992899879}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -35.893494, y: 11.21, z: -5.141571}
-  m_LocalScale: {x: 1.5809038, y: 1.792487, z: 1.5809038}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -35.893494, y: 8.6316, z: -5.141571}
+  m_LocalScale: {x: 0.76432216, y: 0.86661667, z: 0.76432216}
   m_Children:
   - {fileID: 2535999410754003706}
   - {fileID: 7858445647728913641}
@@ -175,6 +176,22 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!54 &328088996028173069
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7829999053992899879}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &9112990524890590073
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,7 +204,7 @@ GameObject:
   - component: {fileID: 2167995136552481479}
   m_Layer: 0
   m_Name: GameObject
-  m_TagString: Untagged
+  m_TagString: DestroyAble
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
