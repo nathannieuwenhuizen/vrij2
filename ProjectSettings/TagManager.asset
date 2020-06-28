@@ -7,6 +7,7 @@ TagManager:
   - End
   - Button
   - DestroyAble
+  - Bush
   layers:
   - Default
   - TransparentFX

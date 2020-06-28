@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   popUpText: Steal
   isHigherUp: 0
-  effectSound: 12
+  effectSound: 9
 --- !u!1 &3921345035651053443
 GameObject:
   m_ObjectHideFlags: 0

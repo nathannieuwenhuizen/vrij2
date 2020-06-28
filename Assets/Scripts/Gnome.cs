@@ -71,6 +71,11 @@ public class Gnome : Walkable
     [SerializeField]
     private Animator anim;
 
+    [SerializeField]
+    private BushEffect bushEffect;
+    [SerializeField]
+    private ParticleSystem destructionParticle;
+
     public TrenchCoat TrenchCoat
     {
         get { return trenchCoat; }
@@ -350,6 +355,7 @@ public class Gnome : Walkable
                 rb.velocity = new Vector3(lookRotation.x * stackedSpeed, rb.velocity.y, lookRotation.z * stackedSpeed);
             }
             anim.SetFloat("Velocity", rb.velocity.magnitude);
+            bushEffect.UpdateBush(rb.velocity.magnitude / normalSpeed);
         }
         else
         {
@@ -388,6 +394,7 @@ public class Gnome : Walkable
         {
             if (collision.gameObject.GetComponent<MeshDestroy>() == null)
             {
+                destructionParticle.Emit(10);
                 CameraShake.instance?.Shake(.5f);
                 AudioManager.instance?.PlaySound(AudioEffect.destruction, .5f);
                 MeshDestroy md = collision.gameObject.AddComponent<MeshDestroy>();
@@ -406,6 +413,10 @@ public class Gnome : Walkable
         {
             other.GetComponent<FloorButton>()?.Push(this);
         }
+        else if (other.gameObject.tag == "Bush")
+        {
+            bushEffect.EnterBush(other.gameObject);
+        }
 
         if (other.GetComponent<FocusArea>() != null)
         {
@@ -419,6 +430,11 @@ public class Gnome : Walkable
         {
             other.GetComponent<FloorButton>()?.Release(this);
         }
+        else if (other.gameObject.tag == "Bush")
+        {
+            bushEffect.LeaveBush(other.gameObject);
+        }
+
 
         if (other.GetComponent<FocusArea>() != null)
         {

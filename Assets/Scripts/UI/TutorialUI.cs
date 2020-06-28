@@ -80,13 +80,9 @@ public class TutorialUI : MonoBehaviour
 
         while (index < _duration)
         {
-            Debug.Log("Should fade by now!" + index + " | " + _duration);
-
             index += Time.deltaTime;
             yield return new WaitForFixedUpdate();
 
-
-            Debug.Log("End fade by now!" + index);
 
             color.a = Mathf.Lerp(startAlpha, _endAlpha, index);
             renderer.color = color;

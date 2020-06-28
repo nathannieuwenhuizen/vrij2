@@ -28,7 +28,7 @@ public static class Data
         new SpokenLine("Ronald", "How do we get out?"),
         new SpokenLine("David", "Maybe the crown can help us out with it's magical powers?"),
         new SpokenLine("David", "Like going through walls?"),
-        new SpokenLine("Ronald", "Yeah... likt that is going to happen!"),
+        new SpokenLine("Ronald", "Yeah... like THAT is going to happen!"),
         new SpokenLine("David", "Well, try it!")
     };
     public static SpokenLine[] endDialogue = new SpokenLine[] {

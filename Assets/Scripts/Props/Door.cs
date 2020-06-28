@@ -26,6 +26,7 @@ public class Door : MonoBehaviour
     [SerializeField]
     private bool reverse = false;
 
+    private bool withSound = false;
 
     public void Update()
     {
@@ -40,6 +41,16 @@ public class Door : MonoBehaviour
         }
     }
 
+    public void Start()
+    {
+        StartCoroutine(MakeSoundActive());
+    }
+
+    IEnumerator MakeSoundActive()
+    {
+        yield return new WaitForSeconds(1f);
+        withSound = true;
+    }
     private bool IsActivated()
     {
         if (buttons.Length == 0) return false;
@@ -72,6 +83,10 @@ public class Door : MonoBehaviour
     {
         if (open) return;
 
+        if (withSound)
+        {
+            AudioManager.instance?.PlaySound(AudioEffect.doorOpen, .5f, 1f);
+        }
         open = true;
         StopAllCoroutines();
         StartCoroutine(Animate(1f, 0f));
@@ -80,6 +95,11 @@ public class Door : MonoBehaviour
     public void Close()
     {
         if (!open || prenamentOpen) return;
+
+        if (withSound)
+        {
+            AudioManager.instance?.PlaySound(AudioEffect.doorOpen, .3f, .7f);
+        }
 
         open = false;
         StopAllCoroutines();

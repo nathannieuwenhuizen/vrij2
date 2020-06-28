@@ -20,15 +20,14 @@ public class GameManager : BaseManager
     private OffScreenPointer pointer;
     [SerializeField]
     private Sprite homeSprite;
-
+     
     public override void Start()
     {
         base.Start();
         instance = this;
 
-        AudioManager.instance?.Playmusic(Music.museum, musicVolume);
-
-        //CrownIsStolen(null);
+        //AudioManager.instance?.Playmusic(Music.museum, musicVolume);
+        State = GameState.idle;
     }
 
     public IEnumerator CrownStolenCutscene(Gnome gnome)
@@ -76,18 +75,24 @@ public class GameManager : BaseManager
             switch (state)
             {
                 case GameState.idle:
-                    AudioManager.instance?.FadeMusic(Music.museum, 1f);
+                    //AudioManager.instance?.FadeMusic(Music.museum, 1f);
+                    AudioManager.instance?.ChangeMusicLayers(new float[] { 0, 1, 0, 0, 1, 1, 0 });
+
                     PPHandeler.ChangeChromaticDistribution(0);
                     break;
                 case GameState.alert:
-                    AudioManager.instance?.FadeMusic(Music.guardSeesYou, 1f);
+                    //AudioManager.instance?.FadeMusic(Music.guardSeesYou, 1f);
+                    AudioManager.instance?.ChangeMusicLayers(new float[] { 1, 1, 1, 0, 1, 1, 0 });
+
                     PPHandeler.ChangeChromaticDistribution(0.2f);
                     break;
                 case GameState.escape:
-                    AudioManager.instance?.FadeMusic(Music.guardSeesYou, 1f);
+                    AudioManager.instance?.ChangeMusicLayers(new float[] { 1, 1, 1, 1, 1, 1, 1 });
+                    //AudioManager.instance?.FadeMusic(Music.guardSeesYou, 1f);
                     PPHandeler.ChangeChromaticDistribution(.5f);
                     break;
                 case GameState.cutscene:
+                    AudioManager.instance?.ChangeMusicLayers(new float[] { 0, 0, 0, 0, 1, 0, 0 });
                     break;
                 default:
                     break;
