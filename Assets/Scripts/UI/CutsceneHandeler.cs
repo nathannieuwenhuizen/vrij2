@@ -41,7 +41,6 @@ public class CutsceneHandeler : MonoBehaviour
     [SerializeField]
     private AudioClip[] gnomeSounds;
 
-
     // Use this for initialization
     void Start()
     {
@@ -154,6 +153,7 @@ public class CutsceneHandeler : MonoBehaviour
                 nextButton_Controller.gameObject.SetActive(false);
                 nextButton_Keyboard.gameObject.SetActive(true);
             }
+            StartCoroutine(AnimateNextButton());
 
             while (nextLine == false)
             {
@@ -204,6 +204,37 @@ public class CutsceneHandeler : MonoBehaviour
                 //yield return new WaitForFixedUpdate();
                 yield return new WaitForSeconds(letterPause);
             }
+        }
+    }
+    IEnumerator AnimateNextButton()
+    {
+        float index = 0;
+        float sinIndex = 0;
+        float alphaAmplitude = .2f;
+        while (nextButton_Keyboard.IsActive())
+        {
+            Debug.Log(AlphaNextButton);
+            index = Mathf.Min(1, index + Time.deltaTime);
+            sinIndex += Time.deltaTime * 3;
+            AlphaNextButton = index - alphaAmplitude + Mathf.Sin(sinIndex) * alphaAmplitude;
+            yield return new WaitForFixedUpdate();
+        }
+    }
+    public float AlphaNextButton
+    {
+        get
+        {
+            if (Data.ControllerConnected())
+                return nextButton_Controller.color.a;
+            else
+                return nextButton_Keyboard.color.a;
+        }
+        set
+        {
+            if (Data.ControllerConnected())
+                nextButton_Controller.color = new Color(1, 1, 1, value);
+            else
+                nextButton_Keyboard.color = new Color(1, 1, 1, value);
         }
     }
 }
