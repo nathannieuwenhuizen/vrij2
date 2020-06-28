@@ -211,7 +211,7 @@ public class CutsceneHandeler : MonoBehaviour
         float index = 0;
         float sinIndex = 0;
         float alphaAmplitude = .2f;
-        while (nextButton_Keyboard.IsActive())
+        while (nextButton_Keyboard.IsActive() || nextButton_Controller.IsActive())
         {
             index = Mathf.Min(1, index + Time.deltaTime);
             sinIndex += Time.deltaTime * 3;
