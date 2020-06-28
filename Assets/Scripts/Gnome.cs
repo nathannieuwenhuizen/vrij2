@@ -73,6 +73,8 @@ public class Gnome : Walkable
 
     [SerializeField]
     private BushEffect bushEffect;
+    [SerializeField]
+    private ParticleSystem destructionParticle;
 
     public TrenchCoat TrenchCoat
     {
@@ -392,6 +394,7 @@ public class Gnome : Walkable
         {
             if (collision.gameObject.GetComponent<MeshDestroy>() == null)
             {
+                destructionParticle.Emit(10);
                 CameraShake.instance?.Shake(.5f);
                 AudioManager.instance?.PlaySound(AudioEffect.destruction, .5f);
                 MeshDestroy md = collision.gameObject.AddComponent<MeshDestroy>();
